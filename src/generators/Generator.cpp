@@ -158,9 +158,13 @@ void Generator::_postRow() {
     if( this->_temp > this->_progress ) {
         while( this->_progress < this->_temp ) {
             this->_progress++;
-            cout << ".";
+            if(!this->_opts->quiet){
+				cout << ".";
+			}
         }
-        cout.flush();
+        if(!this->_opts->quiet){
+			cout.flush();
+		}
     }
 
     this->_row++;
@@ -179,7 +183,9 @@ void Generator::_postColumn() {
 }
 
 void Generator::_postLoop() {
-    cout << endl << endl << "Completed " << this->_acc_iterations << " of " << this->_current_iteration << " allocated iterations" << endl;
+    if(!this->_opts->quiet){
+		cout << endl << endl << "Completed " << this->_acc_iterations << " of " << this->_current_iteration << " allocated iterations" << endl;
+	}
 
     if( this->_opts->showuniques ) {
         cout << "Unique escape times with number of occurences:" << endl;

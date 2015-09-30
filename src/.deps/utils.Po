@@ -1,0 +1,5 @@
+src/utils.o: src/utils.cpp /usr/include/stdc-predef.h src/utils.hpp
+
+/usr/include/stdc-predef.h:
+
+src/utils.hpp:

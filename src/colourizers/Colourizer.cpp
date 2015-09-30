@@ -85,9 +85,13 @@ bool Colourizer::paletteProgressTick( int current ) {
         if( this->_temp > this->_palette_progress ) {
             while( this->_palette_progress < this->_temp ) {
                 this->_palette_progress++;
-                cout << ".";
+                if(!this->_opts->quiet){
+					cout << ".";
+				}
             }
-            cout.flush();
+            if(!this->_opts->quiet){
+				cout.flush();
+			}
         }
 
 		return true;
@@ -115,15 +119,21 @@ bool Colourizer::run() {
         if( this->_temp > this->_progress ) {
             while( this->_progress < this->_temp ) {
                 this->_progress++;
-                cout << ".";
+                if(!this->_opts->quiet){
+					cout << ".";
+				}
             }
-            cout.flush();
+            if(!this->_opts->quiet){
+				cout.flush();
+			}
         }
     }
     this->_image.syncPixels();
 
-    cout << endl << endl << "Completed " << this->_total_iterations << " pixels" << endl;
-    cout.flush();
+    if(!this->_opts->quiet){
+		cout << endl << endl << "Completed " << this->_total_iterations << " pixels" << endl;
+    	cout.flush();
+	}
 	
     return true;
 }

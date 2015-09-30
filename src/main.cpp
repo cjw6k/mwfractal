@@ -57,14 +57,18 @@ int main(int argc, char** argv) {
             break;
     }
 
-    cout << endl << "==== Phase 1 ====: Mathematical Modelling..." << endl;
-    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;
+	if(!opts->quiet){
+	    cout << endl << "==== Phase 1 ====: Mathematical Modelling..." << endl;
+	    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;
+	}
     if( !generator->run() ) {
         cout << "x" << endl << endl << " (!) Generator run failed." << endl;
         exit( EXIT_FAILURE );
     }
 
-    cout << endl;
+    if(!opts->quiet){
+		cout << endl;
+	}
 
     boost::shared_ptr<Colourizer> colourizer;
 
@@ -94,41 +98,58 @@ int main(int argc, char** argv) {
     colourizer->setResults( &generator->results );
     colourizer->setOrbits( &generator->orbits );
 
-    cout << endl << "==== Phase 2 ====: Palette Selection..." << endl;
-    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;
+	if(!opts->quiet){
+	    cout << endl << "==== Phase 2 ====: Palette Selection..." << endl;
+	    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;
+	}
     if( !colourizer->generatePalette() ) {
         cout << "x" << endl << endl << " (!) Palette generation failed." << endl;
         exit( EXIT_FAILURE );
     }
 
+	if(!opts->quiet){
+		cout << endl;
+	}
 
-    cout << endl;
-
-    cout << endl << "==== Phase 3 ====: Colouring..." << endl;
-    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;
+	if(!opts->quiet){
+	    cout << endl << "==== Phase 3 ====: Colouring..." << endl;
+	    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;
+	}
     if( !colourizer->run() ) {
         cout << "x" << endl << endl << " (!) Colouring run failed." << endl;
         exit( EXIT_FAILURE );
     }
 
-    cout << endl;
+    if(!opts->quiet){
+		cout << endl;
+	}
 
-    cout << endl << "Writing File '";
-	try {
+	if(!opts->quiet){
+	    cout << endl << "Writing File '";
+	}
+    try {
         ostringstream filename;
-        filename << "fractal-cl(" << opts->colourizer << ")";
-        filename << "_g(" << opts->generator << ")";
-        filename << "_c(" << opts->cr << "," << opts->ci << ")";
-        filename << "_dp(" << opts->dprx << "," << opts->dpix << ")";
-        filename << "_i(" << opts->max_iterations << ")";
-        filename << "_s(" << ( opts->max_re - opts->min_re ) << "," << ( opts->max_im - opts->min_im ) << ")";
-        filename << "_o(" << ( opts->max_re + opts->min_re ) / 2 << "," << ( opts->max_im + opts->min_im ) / 2 << ")";
-        filename << "." << opts->fileformat;
-        cout << filename.str() << "' ... ";
-        cout.flush();
+        if(opts->output_filename.empty()){
+            filename << "fractal-cl(" << opts->colourizer << ")";
+            filename << "_g(" << opts->generator << ")";
+            filename << "_c(" << opts->cr << "," << opts->ci << ")";
+            filename << "_dp(" << opts->dprx << "," << opts->dpix << ")";
+            filename << "_i(" << opts->max_iterations << ")";
+            filename << "_s(" << ( opts->max_re - opts->min_re ) << "," << ( opts->max_im - opts->min_im ) << ")";
+            filename << "_o(" << ( opts->max_re + opts->min_re ) / 2 << "," << ( opts->max_im + opts->min_im ) / 2 << ")";
+            filename << "." << opts->fileformat;
+        } else {
+            filename << opts->output_filename;
+        }
+		if(!opts->quiet){
+	        cout << filename.str() << "' ... ";
+	        cout.flush();
+		}
 
         colourizer->writeImage( filename.str().c_str() );
-        cout << "Done!" << endl << endl;
+        if(!opts->quiet){
+			cout << "Done!" << endl << endl;
+		}
 
         if( opts->autoopen ) {
             ostringstream cmd;
