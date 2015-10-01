@@ -20,21 +20,21 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-Colourizer::Colourizer( boost::shared_ptr<ProgramOptions> opts ) {
+Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts){
     this->_opts = opts;
     
     this->_spectral_diff = opts->spectral_max - opts->spectral_min;
     this->_lightness_diff = opts->lightness_max - opts->lightness_min;
     this->_arctan_horiz_scaler = opts->colour_weighting / opts->number_hue;
-    this->_arctan_vert_scaler = atan( opts->colour_weighting );
+    this->_arctan_vert_scaler = atan(opts->colour_weighting);
 
 
     this->_px = opts->width;
-    if( this->_px == 0 ) {
+    if(this->_px == 0){
 		this->_px = 1;
 	}
     this->_py = opts->height;
-    if( this->_py == 0 ) {
+    if(this->_py == 0){
 		this->_py = 1;
 	}
     this->_total_iterations = this->_px * this->_py;
@@ -45,45 +45,45 @@ Colourizer::Colourizer( boost::shared_ptr<ProgramOptions> opts ) {
     this->_palette_progress = 0;
     this->_lo_iteration = 0xFFFFFFFF;
     this->_hi_iteration = 0;
-    InitializeMagick( "" );
-	this->_image = Image( Geometry( this->_px, this->_py ), opts->convergecolour );
-    this->_image.type( TrueColorType );
+    InitializeMagick("");
+	this->_image = Image(Geometry(this->_px, this->_py), opts->convergecolour);
+    this->_image.type(TrueColorType);
 }
 
-Colourizer::Colourizer( const Colourizer& orig ) {
+Colourizer::Colourizer(const Colourizer& orig){
 }
 
-Colourizer::~Colourizer() {
+Colourizer::~Colourizer(){
 }
 
-void Colourizer::setResults( std::vector<std::vector<float> >* results ) {
+void Colourizer::setResults(std::vector<std::vector<float> >* results){
     this->results = results;
     std::vector<float>::iterator min_temp, max_temp;
-    for( this->_idy = 0; this->_idy < this->_py; this->_idy++ ) {
-        min_temp = min_element( (*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end(), findmin );
-        max_temp = max_element( (*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end() );
-		if( this->_lo_iteration > (*min_temp) ) {
+    for(this->_idy = 0; this->_idy < this->_py; this->_idy++){
+        min_temp = min_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end(), findmin);
+        max_temp = max_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end());
+		if(this->_lo_iteration > (*min_temp)){
             this->_lo_iteration = (*min_temp);
         }
-        if( this->_hi_iteration < (*max_temp) ) {
+        if(this->_hi_iteration < (*max_temp)){
             this->_hi_iteration = (*max_temp);
         }
     }
-    this->_colour_scaler = ( this->_opts->number_hue - 1 ) / ( this->_hi_iteration - this->_lo_iteration );
+    this->_colour_scaler = (this->_opts->number_hue - 1) / (this->_hi_iteration - this->_lo_iteration);
 }
 
-void Colourizer::setOrbits( std::vector<std::vector<std::vector<std::complex<float> > > >* orbits ) {
+void Colourizer::setOrbits(std::vector<std::vector<std::vector<std::complex<float> > > >* orbits){
 	this->orbits = orbits;
 }
 
-bool Colourizer::generatePalette() {
+bool Colourizer::generatePalette(){
     return false;
 }
 
-bool Colourizer::paletteProgressTick( int current ) {
-        this->_temp = ceil( current / this->_palette_progress_diff );
-        if( this->_temp > this->_palette_progress ) {
-            while( this->_palette_progress < this->_temp ) {
+bool Colourizer::paletteProgressTick(int current){
+        this->_temp = ceil(current / this->_palette_progress_diff);
+        if(this->_temp > this->_palette_progress){
+            while(this->_palette_progress < this->_temp){
                 this->_palette_progress++;
                 if(!this->_opts->quiet){
 					cout << ".";
@@ -97,27 +97,27 @@ bool Colourizer::paletteProgressTick( int current ) {
 		return true;
 }
 
-bool Colourizer::run() {
+bool Colourizer::run(){
 	int palette_size = this->_palette.size() - 1;
 
-    PixelPacket *pixel_cache = this->_image.getPixels( 0, 0, this->_px, this->_py );
+    PixelPacket *pixel_cache = this->_image.getPixels(0, 0, this->_px, this->_py);
     PixelPacket *next_pixel = pixel_cache;
 
-    for( this->_idy = 0; this->_idy < this->_py; this->_idy++ ) {
-        for( this->_idx = 0; this->_idx < this->_px; this->_idx++ ) {
-            if( (*this->results)[this->_idy][this->_idx] != -1 ) {
-                if( this->_opts->invertspectrum ) {
-                    *next_pixel = this->_palette[palette_size - ( int )floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler )];
+    for(this->_idy = 0; this->_idy < this->_py; this->_idy++){
+        for(this->_idx = 0; this->_idx < this->_px; this->_idx++){
+            if((*this->results)[this->_idy][this->_idx] != -1){
+                if(this->_opts->invertspectrum){
+                    *next_pixel = this->_palette[palette_size - (int)floor(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
                 } else {
-                    *next_pixel = this->_palette[( int )floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler )];
+                    *next_pixel = this->_palette[(int)floor(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
                 }
             }
             *next_pixel++;
         }
         this->_current_iteration += this->_px;
-        this->_temp = floor( this->_current_iteration / this->_progress_diff );
-        if( this->_temp > this->_progress ) {
-            while( this->_progress < this->_temp ) {
+        this->_temp = floor(this->_current_iteration / this->_progress_diff);
+        if(this->_temp > this->_progress){
+            while(this->_progress < this->_temp){
                 this->_progress++;
                 if(!this->_opts->quiet){
 					cout << ".";
@@ -138,7 +138,7 @@ bool Colourizer::run() {
     return true;
 }
 
-void Colourizer::writeImage( const char* filename ) {
-    this->_image.write( filename );
+void Colourizer::writeImage(const char* filename){
+    this->_image.write(filename);
 }
 

@@ -26,20 +26,20 @@
 
 #include "../ProgramOptions.hpp"
 
-namespace JS {
+namespace JS{
 
-class Colourizer {
+class Colourizer{
 
 public:
-    Colourizer( boost::shared_ptr<ProgramOptions> opts );
-    Colourizer( const Colourizer& orig );
+    Colourizer(boost::shared_ptr<ProgramOptions> opts);
+    Colourizer(const Colourizer& orig);
     virtual ~Colourizer();
     virtual bool generatePalette();
-	bool paletteProgressTick( int current );
+	bool paletteProgressTick(int current);
     virtual bool run();
-    void setResults( std::vector<std::vector<float> >* results );
-    void setOrbits( std::vector<std::vector<std::vector<std::complex<float> > > >* orbits );
-    void writeImage( const char* filename );
+    void setResults(std::vector<std::vector<float> >* results);
+    void setOrbits(std::vector<std::vector<std::vector<std::complex<float> > > >* orbits);
+    void writeImage(const char* filename);
 
     std::vector<std::vector<float> >* results;
     std::vector<std::vector<std::vector<std::complex<float> > > >* orbits;

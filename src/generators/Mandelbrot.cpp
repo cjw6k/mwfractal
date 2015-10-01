@@ -17,23 +17,23 @@
 using namespace std;
 using namespace JS;
 
-Mandelbrot::Mandelbrot( boost::shared_ptr<ProgramOptions> opts )
- : Generator::Generator( opts ) {
+Mandelbrot::Mandelbrot(boost::shared_ptr<ProgramOptions> opts)
+ : Generator::Generator(opts){
 }
 
-Mandelbrot::Mandelbrot( const Mandelbrot& orig )
- : Generator::Generator( orig ) {
+Mandelbrot::Mandelbrot(const Mandelbrot& orig)
+ : Generator::Generator(orig){
 }
 
-Mandelbrot::~Mandelbrot() {
+Mandelbrot::~Mandelbrot(){
 }
 
-void Mandelbrot::_preOrbit() {
+void Mandelbrot::_preOrbit(){
     this->_c = this->_p;
-    this->_z = complex<float>( 0, 0 );
+    this->_z = complex<float>(0, 0);
     Generator::_preOrbit();
 }
 
-void Mandelbrot::_iterate() {
+void Mandelbrot::_iterate(){
     this->_z = this->_z * this->_z + this->_c;
 }

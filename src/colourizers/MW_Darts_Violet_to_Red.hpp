@@ -17,19 +17,19 @@
 
 #include "Colourizer.hpp"
 
-namespace JS {
+namespace JS{
 
-class MW_Darts_Violet_to_Red : public Colourizer {
+class MW_Darts_Violet_to_Red : public Colourizer{
 
 public:
-    MW_Darts_Violet_to_Red( boost::shared_ptr<ProgramOptions> opts );
-    MW_Darts_Violet_to_Red( const MW_Darts_Violet_to_Red& orig );
+    MW_Darts_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts);
+    MW_Darts_Violet_to_Red(const MW_Darts_Violet_to_Red& orig);
     virtual ~MW_Darts_Violet_to_Red();
     bool generatePalette();
     void generateScores();
 	bool run();
 	int game();
-	int getScore( std::complex<float> shot );
+	int getScore(std::complex<float> shot);
 
 private:
     int _lo_score, _hi_score;

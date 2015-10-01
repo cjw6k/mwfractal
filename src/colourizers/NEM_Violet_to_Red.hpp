@@ -17,13 +17,13 @@
 
 #include "Colourizer.hpp"
 
-namespace JS {
+namespace JS{
 
-class NEM_Violet_to_Red : public Colourizer {
+class NEM_Violet_to_Red : public Colourizer{
 
 public:
-    NEM_Violet_to_Red( boost::shared_ptr<ProgramOptions> opts );
-    NEM_Violet_to_Red( const NEM_Violet_to_Red& orig );
+    NEM_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts);
+    NEM_Violet_to_Red(const NEM_Violet_to_Red& orig);
     virtual ~NEM_Violet_to_Red();
     bool generatePalette();
 

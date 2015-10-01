@@ -17,13 +17,13 @@
 
 #include <string>
 
-namespace JS {
+namespace JS{
 
-class ProgramOptions {
+class ProgramOptions{
 
 public:
-    ProgramOptions( int argc, char **argv );
-    ProgramOptions( const ProgramOptions& orig );
+    ProgramOptions(int argc, char **argv);
+    ProgramOptions(const ProgramOptions& orig);
     virtual ~ProgramOptions();
     int getStatus();
 

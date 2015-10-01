@@ -24,13 +24,13 @@
 
 #include "../ProgramOptions.hpp"
 
-namespace JS {
+namespace JS{
 
-class Generator {
+class Generator{
 
 public:
-    Generator( boost::shared_ptr<ProgramOptions> opts );
-    Generator( const Generator& orig );
+    Generator(boost::shared_ptr<ProgramOptions> opts);
+    Generator(const Generator& orig);
     virtual ~Generator();
     virtual bool run();
     std::vector<std::vector<float> > results;
