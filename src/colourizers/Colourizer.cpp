@@ -58,7 +58,7 @@ Colourizer::~Colourizer(){
 
 void Colourizer::setResults(std::vector<std::vector<float> >* results){
     this->results = results;
-    std::vector<float>::iterator min_temp, max_temp;
+	std::vector<float>::iterator min_temp, max_temp;
     for(this->_idy = 0; this->_idy < this->_py; this->_idy++){
         min_temp = min_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end(), findmin);
         max_temp = max_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end());
@@ -69,6 +69,15 @@ void Colourizer::setResults(std::vector<std::vector<float> >* results){
             this->_hi_iteration = (*max_temp);
         }
     }
+	
+	if(this->_opts->low_escape > -1){
+		this->_lo_iteration = this->_opts->low_escape;
+	}
+
+	if(this->_opts->high_escape > -1){
+		this->_hi_iteration = this->_opts->high_escape;
+	}
+	
     this->_colour_scaler = (this->_opts->number_hue - 1) / (this->_hi_iteration - this->_lo_iteration);
 }
 
@@ -102,14 +111,14 @@ bool Colourizer::run(){
 
     PixelPacket *pixel_cache = this->_image.getPixels(0, 0, this->_px, this->_py);
     PixelPacket *next_pixel = pixel_cache;
-
+	
     for(this->_idy = 0; this->_idy < this->_py; this->_idy++){
         for(this->_idx = 0; this->_idx < this->_px; this->_idx++){
             if((*this->results)[this->_idy][this->_idx] != -1){
                 if(this->_opts->invertspectrum){
-                    *next_pixel = this->_palette[palette_size - (int)floor(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
-                } else {
-                    *next_pixel = this->_palette[(int)floor(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
+					*next_pixel = this->_palette[palette_size - (int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
+			   } else {
+                    *next_pixel = this->_palette[(int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
                 }
             }
             *next_pixel++;
@@ -128,8 +137,9 @@ bool Colourizer::run(){
 			}
         }
     }
+	
     this->_image.syncPixels();
-
+	
     if(!this->_opts->quiet){
 		cout << endl << endl << "Completed " << this->_total_iterations << " pixels" << endl;
     	cout.flush();
@@ -142,3 +152,6 @@ void Colourizer::writeImage(const char* filename){
     this->_image.write(filename);
 }
 
+void Colourizer::profile(){
+	cout << this->_lo_iteration << ":" << this->_hi_iteration << endl;
+}

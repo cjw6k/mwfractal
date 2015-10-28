@@ -70,7 +70,7 @@ int main(int argc, char** argv){
     if(!opts->quiet){
 		cout << endl;
 	}
-
+	
     boost::shared_ptr<Colourizer> colourizer;
 
     switch(opts->colourizer){
@@ -99,6 +99,11 @@ int main(int argc, char** argv){
     colourizer->setResults(&generator->results);
     colourizer->setOrbits(&generator->orbits);
 
+	if(opts->profile){
+		colourizer->profile();
+		exit(EXIT_SUCCESS);
+	}	
+	
 	if(!opts->quiet){
 	    cout << endl << "==== Phase 2 ====: Palette Selection..." << endl;
 	    cout << endl << "|0%------------------------------------|-50%-------------------------------100%|" << endl;

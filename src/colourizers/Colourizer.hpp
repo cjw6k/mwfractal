@@ -40,7 +40,8 @@ public:
     void setResults(std::vector<std::vector<float> >* results);
     void setOrbits(std::vector<std::vector<std::vector<std::complex<float> > > >* orbits);
     void writeImage(const char* filename);
-
+	void profile();
+	
     std::vector<std::vector<float> >* results;
     std::vector<std::vector<std::vector<std::complex<float> > > >* orbits;
 
