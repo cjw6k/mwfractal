@@ -37,7 +37,7 @@ ProgramOptions::ProgramOptions(int argc, char **argv){
 
     bpo::options_description model("Mathematical Model Options");
     model.add_options()
-        ("generator", bpo::value<int>(&this->generator)->default_value(1), "Generator model - 1: Julia, 2: Mandelbrot")
+        ("generator", bpo::value<int>(&this->generator)->default_value(1), "Generator model - 1: Julia, 2: Mandelbrot, 3: Julia x3+c, 4: Julia Pow Exp")
         ("iterations", bpo::value<int>(&this->max_iterations)->default_value(32), "Number of iterations per pixel")
         ("c_real", bpo::value<double>(&this->cr)->default_value(-0.835), "Real part of c")
         ("c_imag", bpo::value<double>(&this->ci)->default_value(-0.2321), "Imaginary part of c")
@@ -46,6 +46,8 @@ ProgramOptions::ProgramOptions(int argc, char **argv){
         ("min_imag", bpo::value<double>(&this->min_im)->default_value(-1.125), "")
         ("max_imag", bpo::value<double>(&this->max_im)->default_value(1.125), "")
         ("z_cutoff", bpo::value<double>(&this->cutoff)->default_value(4096), "")
+        ("g4_power", bpo::value<double>(&this->g4_power)->default_value(2), "")
+        ("g4_exponent", bpo::value<double>(&this->g4_exponent)->default_value(2), "")
         ("show_uniques", bpo::value<bool>(&this->showuniques)->zero_tokens() )
         ("show_orbits", bpo::value<bool>(&this->showorbits)->zero_tokens() )
         ("skip_orbits", bpo::value<bool>(&this->skiporbits)->zero_tokens() )

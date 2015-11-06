@@ -117,7 +117,7 @@ bool Colourizer::run(){
             if((*this->results)[this->_idy][this->_idx] != -1){
                 if(this->_opts->invertspectrum){
 					*next_pixel = this->_palette[palette_size - (int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
-			   } else {
+			    } else {
                     *next_pixel = this->_palette[(int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
                 }
             }

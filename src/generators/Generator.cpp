@@ -119,7 +119,11 @@ void Generator::_iterate(){
 }
 
 void Generator::_postIterate(){
-    this->_zabs = abs(this->_z);
+	if(!isfinite(abs(this->_z))){
+		this->_zabs = 10000;
+	} else {
+		this->_zabs = abs(this->_z);
+	}
     if(!this->_opts->skiporbits){
         this->orbits[this->_row][this->_col].push_back(this->_z);
     }

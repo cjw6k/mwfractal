@@ -19,6 +19,8 @@
 
 #include "../config.h"
 #include "ProgramOptions.hpp"
+#include "generators/JuliaPowExp.hpp"
+#include "generators/Julia3.hpp"
 #include "generators/Julia.hpp"
 #include "generators/Mandelbrot.hpp"
 #include "colourizers/NEM_Violet_to_Red.hpp"
@@ -49,6 +51,14 @@ int main(int argc, char** argv){
 
         case 2:
             generator.reset(new Mandelbrot(opts));
+            break;
+
+		case 3:
+            generator.reset(new Julia3(opts));
+            break;
+			
+		case 4:
+            generator.reset(new JuliaPowExp(opts));
             break;
 
         default:
