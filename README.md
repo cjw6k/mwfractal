@@ -2,6 +2,7 @@
 
 mwfractal
 =========
+[![Coverity Scan Build Status](https://scan.coverity.com/projects/13861/badge.svg)](https://scan.coverity.com/projects/cjwillcock-mwfractal)
 
 ### Dependencies ###
 - automake
