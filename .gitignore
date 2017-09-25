@@ -1,3 +1,4 @@
 cov-int
 *.png
+!samples/*.png
 mwfractal.tgz

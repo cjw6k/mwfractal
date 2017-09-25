@@ -33,7 +33,12 @@ using namespace JS;
 
 int main(int argc, char** argv){
     boost::shared_ptr<ProgramOptions> opts;
-    opts.reset( new ProgramOptions(argc, argv));
+	try {
+		opts.reset( new ProgramOptions(argc, argv));
+	} catch (exception e){
+        cout << " (!) " << e.what() << endl;
+        exit(EXIT_FAILURE);		
+	}
     if(opts->getStatus() != 0){
         if(opts->getStatus() > 1){
             exit(EXIT_FAILURE);
