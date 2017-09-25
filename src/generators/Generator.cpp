@@ -17,29 +17,38 @@
 using namespace std;
 using namespace JS;
 
-Generator::Generator(boost::shared_ptr<ProgramOptions> opts){
-    this->_opts = opts;
+Generator::Generator(boost::shared_ptr<ProgramOptions> opts) :
+		_opts(opts),
+		_c(),
+		_px(opts->width),
+		_py(opts->height),
+		_ppx(),
+		_ppy(),
+		_row(),
+		_col(),
+		_acc_iterations(),
+		_current_iteration(),
+		_current_point(),
+		_progress(),
+		_idx(),
+		_temp(),
+		_zabs(),
+		_iterate_fraction(),
+		_argument()
+	{
 
-    this->_c = complex<float>(0, 0);
-	this->_px = opts->width;
     if(this->_px == 0){
 		this->_px = 1;
     }
-	this->_py = opts->height;
     if(this->_py == 0){
 		this->_py = 1;
 	}
     this->_dp_re = complex<float>((opts->max_re - opts->min_re) / opts->width, 0);
     this->_dp_im = complex<float>(0, ( opts->max_im - opts->min_im) / opts->height);
     this->_p = complex<float>(opts->min_re + this->_dp_re.real() / 2, opts->max_im - this->_dp_im.imag() / 2);
-    
-	this->_ppx = this->_ppy = 0;
 
     this->_total_points = this->_px * this->_py;
 
-    this->_row = this->_col = 0;
-    this->_acc_iterations = this->_current_iteration = this->_current_point = 0;
-    this->_progress = 0;
     this->_progress_diff = (float)this->_total_points / 80;
     this->_ln_2 = log(2.0);
     this->_ln_cutoff = log(this->_opts->cutoff);
@@ -59,9 +68,6 @@ Generator::Generator(boost::shared_ptr<ProgramOptions> opts){
             }
         }
     }
-}
-
-Generator::Generator(const Generator& orig){
 }
 
 Generator::~Generator(){

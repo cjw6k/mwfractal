@@ -149,7 +149,7 @@ int main(int argc, char** argv){
             filename << "fractal-cl(" << opts->colourizer << ")";
             filename << "_g(" << opts->generator << ")";
             filename << "_c(" << opts->cr << "," << opts->ci << ")";
-            filename << "_dp(" << opts->dprx << "," << opts->dpix << ")";
+            filename << "_dp(" << (opts->max_re - opts->min_re) / opts->width << "," << (opts->max_im - opts->min_im) / opts->height << ")";
             filename << "_i(" << opts->max_iterations << ")";
             filename << "_s(" << ( opts->max_re - opts->min_re ) << "," << ( opts->max_im - opts->min_im ) << ")";
             filename << "_o(" << ( opts->max_re + opts->min_re ) / 2 << "," << ( opts->max_im + opts->min_im ) / 2 << ")";

@@ -32,7 +32,6 @@ class Colourizer{
 
 public:
     Colourizer(boost::shared_ptr<ProgramOptions> opts);
-    Colourizer(const Colourizer& orig);
     virtual ~Colourizer();
     virtual bool generatePalette();
 	bool paletteProgressTick(int current);

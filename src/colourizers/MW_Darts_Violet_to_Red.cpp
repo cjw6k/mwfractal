@@ -18,14 +18,17 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(  boost::shared_ptr<ProgramOptions> opts )
- : Colourizer::Colourizer( opts ) {
+MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(  boost::shared_ptr<ProgramOptions> opts ) :
+		Colourizer::Colourizer( opts ),
+		_lo_score(),
+		_hi_score(),
+		_ln_lo_score(),
+		_ln_hi_score(),
+		_ln_score_diff(),
+		_ln_pixel_score()
+	{
 	srand( time( NULL ) );
 } 
-
-MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red( const MW_Darts_Violet_to_Red& orig )
- : Colourizer::Colourizer( orig ) {
-}
 
 MW_Darts_Violet_to_Red::~MW_Darts_Violet_to_Red() {
 }
@@ -109,7 +112,7 @@ bool MW_Darts_Violet_to_Red::run() {
 					*next_pixel = this->_palette.at( ( int )floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler ) + this->_opts->number_hue * ( int )floor( (this->_opts->number_lightness -1)  * this->_frac_part ) );
                 }
             }
-            *next_pixel++;
+            next_pixel++;
         }
 		if(!this->_opts->quiet){
 			this->_current_iteration += this->_px;

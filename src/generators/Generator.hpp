@@ -30,7 +30,6 @@ class Generator{
 
 public:
     Generator(boost::shared_ptr<ProgramOptions> opts);
-    Generator(const Generator& orig);
     virtual ~Generator();
     virtual bool run();
     std::vector<std::vector<float> > results;

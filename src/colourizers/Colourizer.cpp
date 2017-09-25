@@ -20,37 +20,53 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts){
-    this->_opts = opts;
+Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) : 
+		_opts(opts),
+		results(), 
+		orbits(),
+		_px(opts->width),
+		_py(opts->height),
+		_current_iteration(),
+		_progress(),
+		_palette_progress(),
+		_lo_iteration(0xFFFFFFFF),
+		_hi_iteration(),
+		_idy(),
+		_idx(),
+		_temp(),
+		_r(), 
+		_g(), 
+		_b(),
+		_h(), 
+		_s(), 
+		_l(),
+		_chroma(),
+		_x(),
+		_m(),
+		_frac_part(),
+		_ones_digit(),
+		_colour_scaler()
+	{
     
     this->_spectral_diff = opts->spectral_max - opts->spectral_min;
     this->_lightness_diff = opts->lightness_max - opts->lightness_min;
     this->_arctan_horiz_scaler = opts->colour_weighting / opts->number_hue;
     this->_arctan_vert_scaler = atan(opts->colour_weighting);
 
-
-    this->_px = opts->width;
     if(this->_px == 0){
 		this->_px = 1;
 	}
-    this->_py = opts->height;
+
     if(this->_py == 0){
 		this->_py = 1;
 	}
+
     this->_total_iterations = this->_px * this->_py;
-    this->_current_iteration = 0;
     this->_progress_diff = (float)this->_total_iterations / 80;
-    this->_progress = 0;
     this->_palette_progress_diff = (float)opts->number_hue / 80;
-    this->_palette_progress = 0;
-    this->_lo_iteration = 0xFFFFFFFF;
-    this->_hi_iteration = 0;
     InitializeMagick("");
 	this->_image = Image(Geometry(this->_px, this->_py), opts->convergecolour);
     this->_image.type(TrueColorType);
-}
-
-Colourizer::Colourizer(const Colourizer& orig){
 }
 
 Colourizer::~Colourizer(){
@@ -121,7 +137,7 @@ bool Colourizer::run(){
                     *next_pixel = this->_palette[(int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
                 }
             }
-            *next_pixel++;
+            next_pixel++;
         }
         this->_current_iteration += this->_px;
         this->_temp = floor(this->_current_iteration / this->_progress_diff);

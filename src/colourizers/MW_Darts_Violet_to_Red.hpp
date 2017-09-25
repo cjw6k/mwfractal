@@ -23,7 +23,6 @@ class MW_Darts_Violet_to_Red : public Colourizer{
 
 public:
     MW_Darts_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts);
-    MW_Darts_Violet_to_Red(const MW_Darts_Violet_to_Red& orig);
     virtual ~MW_Darts_Violet_to_Red();
     bool generatePalette();
     void generateScores();

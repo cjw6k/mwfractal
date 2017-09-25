@@ -106,7 +106,7 @@ bool NEM_Violet_to_Red_Lightness::run(){
                     *next_pixel = this->_palette.at((int)floor(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler) + this->_opts->number_hue * (int)floor(this->_opts->number_lightness * this->_frac_part));
                 }
             }
-            *next_pixel++;
+            next_pixel++;
 		}
         this->_current_iteration += this->_px;
         this->_temp = floor(this->_current_iteration / this->_progress_diff);

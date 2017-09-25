@@ -32,7 +32,7 @@ AC_PROG_CXX
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lboost_program_options':
 AC_CHECK_LIB([boost_program_options], [main])
-PKG_CHECK_MODULES([MAGICK], [Magick++])
+PKG_CHECK_MODULES(MAGICK, [Magick++])
 
 # Checks for header files.
 

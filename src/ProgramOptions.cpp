@@ -23,8 +23,17 @@ namespace bpo = boost::program_options;
 using namespace JS;
 using namespace std;
 
-ProgramOptions::ProgramOptions(int argc, char **argv){
-    this->profile = this->quiet = this->showresults = this->showorbits = this->skiporbits = this->showuniques = this->drawgraph = this->autoopen = false;
+ProgramOptions::ProgramOptions(int argc, char **argv) : 
+		profile(),
+		quiet(),
+		showresults(),
+		showorbits(),
+		skiporbits(),
+		showuniques(),
+		autoopen(),
+		invertspectrum(),
+		_status()
+	{
 
     bpo::options_description generic("Generic Options");
     generic.add_options()
@@ -67,9 +76,6 @@ ProgramOptions::ProgramOptions(int argc, char **argv){
         ("colour_weighting", bpo::value<double>(&this->colour_weighting)->default_value(0.0), "Colour weighting is complicated...try a real floating pt number (+ or -) and see what happens")
         ("low_escape", bpo::value<double>(&this->low_escape)->default_value(-1), "Force the colourizer to use this value as the lowest value in the range of all escape values")
         ("high_escape", bpo::value<double>(&this->high_escape)->default_value(-1), "Force the colourizer to use this value as the highest value in the range of all escape values")
-//        ("drawgraph", bpo::value<bool>(&this->drawgraph)->zero_tokens(), "Overlay a graph on the image")
-//        ("graphxplot", bpo::value<int>(&this->gx)->default_value(50), "Size in pixels of the x axis plot lines")
-//        ("graphyplot", bpo::value<int>(&this->gy)->default_value(50), "Size in pixels of the y axis plot lines")
         ("invertspectrum,i", bpo::value<bool>(&this->invertspectrum)->zero_tokens(), "Invert the colour spectrum of the colourizer")
         ("profile,p", bpo::value<bool>(&this->profile)->zero_tokens(), "Generate profiling information")
         ("convergecolour", bpo::value<std::string>(&this->convergecolour)->default_value("#000000"), "Colour converging pixels, hex triplet (default is black)");
@@ -157,12 +163,7 @@ ProgramOptions::ProgramOptions(int argc, char **argv){
 		this->quiet = true;
 	}
 	
-    this->_status = 0;
-
     return;
-}
-
-ProgramOptions::ProgramOptions(const ProgramOptions& orig){
 }
 
 ProgramOptions::~ProgramOptions(){
