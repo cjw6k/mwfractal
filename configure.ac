@@ -19,7 +19,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.67])
-AC_INIT([mwfractal], [0.5], [willcock@gmail.com])
+AC_INIT([mwfractal], [1.0], [cjwillcock@ieee.org])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 #AM_SILENT_RULES([yes])
