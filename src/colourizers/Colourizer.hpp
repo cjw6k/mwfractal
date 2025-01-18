@@ -16,7 +16,7 @@
 #define	COLOURIZER_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <ImageMagick/Magick++.h>
+#include <ImageMagick-6/Magick++.h>
 
 #include <algorithm>
 #include <cmath>
