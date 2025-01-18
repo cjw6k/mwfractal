@@ -22,7 +22,6 @@ AC_PREREQ([2.67])
 AC_INIT([mwfractal], [1.0], [cjwillcock@ieee.org])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-#AM_SILENT_RULES([yes])
 AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([config.h])
 
@@ -30,17 +29,14 @@ AC_CONFIG_HEADERS([config.h])
 AC_PROG_CXX
 
 # Checks for libraries.
-# FIXME: Replace `main' with a function in `-lboost_program_options':
-AC_CHECK_LIB([boost_program_options], [main])
-PKG_CHECK_MODULES(MAGICK, [Magick++])
+AC_CHECK_LIB([boost_program_options], [main], [], [AC_MSG_ERROR([boost_program_options library not found])])
+PKG_CHECK_MODULES([MAGICK], [Magick++], [], [AC_MSG_ERROR([Magick++ library not found])])
 
-# Checks for header files.
+# Checks for math library functions.
+AC_SEARCH_LIBS([pow], [m], [], [AC_MSG_ERROR([pow not found in the math library])])
+AC_SEARCH_LIBS([modf], [m], [], [AC_MSG_ERROR([modf not found in the math library])])
+AC_SEARCH_LIBS([floor], [m], [], [AC_MSG_ERROR([floor not found in the math library])])
 
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL
-
-# Checks for library functions.
-AC_CHECK_FUNCS([floor modf pow])
-
+# Generate output files.
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

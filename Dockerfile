@@ -1,0 +1,59 @@
+ARG DEBIAN_VERSION=12.9
+ARG DEBIAN_HASH=sha256:321341744acb788e251ebd374aecc1a42d60ce65da7bd4ee9207ff6be6686a62
+
+ARG ASCIIART_VERSION=0.0.10-2
+ARG AUTOCONF_VERSION=2.71-3
+ARG AUTOMAKE_VERSION=1:1.16.5-1.3
+ARG BOOST_TAG=1.81
+ARG BOOST_VERSION=1.81.0-5+deb12u1
+ARG GPP_VERSION=4:12.2.0-3
+ARG MAGICK_VERSION=8:6.9.11.60+dfsg-1.6+deb12u2
+ARG MAKE_VERSION=4.3-4.1
+ARG PKG_CONFIG_VERSION=1.8.1-1
+
+###
+### mwfractal
+###
+FROM debian:${DEBIAN_VERSION}@${DEBIAN_HASH} AS mwfractal
+
+ARG AUTOCONF_VERSION
+ARG AUTOMAKE_VERSION
+ARG BOOST_TAG
+ARG BOOST_VERSION
+ARG GPP_VERSION
+ARG MAGICK_VERSION
+ARG MAKE_VERSION
+ARG PKG_CONFIG_VERSION
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      autoconf=${AUTOCONF_VERSION} \
+      automake=${AUTOMAKE_VERSION} \
+      g++=${GPP_VERSION} \
+      libboost${BOOST_TAG}-dev=${BOOST_VERSION} \
+      libboost-program-options${BOOST_TAG}-dev=${BOOST_VERSION} \
+      libmagick++-dev=${MAGICK_VERSION} \
+      make=${MAKE_VERSION} \
+      pkg-config=${PKG_CONFIG_VERSION} \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/mwfractal
+
+COPY . .
+
+RUN ./bootstrap && ./configure && make "-j$(nproc)"
+
+ENTRYPOINT ["/opt/mwfractal/mwfractal"]
+
+
+###
+### asciiart
+###
+FROM mwfractal AS asciiart
+
+ARG ASCIIART_VERSION
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      asciiart=${ASCIIART_VERSION} \
+ && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["./demo.sh"]
