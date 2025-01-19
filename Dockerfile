@@ -69,13 +69,15 @@ WORKDIR /opt/mwfractal
 
 COPY . .
 
-RUN chown -R mw:mw /opt/mwfractal
+RUN ./bootstrap && ./configure && make "-j$(nproc)" && make install
+
+WORKDIR /output
+
+RUN chown mw:mw /output
 
 USER mw
 
-RUN ./bootstrap && ./configure && make "-j$(nproc)"
-
-ENTRYPOINT ["/opt/mwfractal/mwfractal"]
+ENTRYPOINT ["/usr/local/bin/mwfractal"]
 
 ###
 ### asciiart
@@ -90,6 +92,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       asciiart=${ASCIIART_VERSION} \
  && rm -rf /var/lib/apt/lists/*
 
+COPY ./asciiart.sh .
+
 USER mw
 
-ENTRYPOINT ["./demo.sh"]
+ENTRYPOINT ["./asciiart.sh"]

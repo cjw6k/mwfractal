@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [ -z "$(docker images -q mwfractal:latest 2> /dev/null)" ]; then
+  docker build -f Dockerfile . -t mwfractal --target mwfractal
+fi
+
+docker run --rm -v "$(pwd)/output:/output" mwfractal "$@"
