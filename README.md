@@ -37,12 +37,12 @@
 |..............................~.~.....~.~.~~~~~~.~~~.~~~.~..........................................|
 +----------------------------------------------------------------------------------------------------+
 ```
-RUn this on your console to see it in colour!
+Run this on your console to see it in colour!
 
 ### Generating Image Files
 Generated images will be found inside the `output/` directory.
 ```shell
-./dmwf --generator 2 --width 640 --height 360
+./dmwf --colourizer 4 --width 640 --height 360
 ```
 ![Darts!](samples/fractal-cl%284%29_g%281%29_c%28-0.835,-0.2321%29_dp%280.00625,0.00625%29_i%2832%29_s%284,2.25%29_o%280,0%29.png)
 
