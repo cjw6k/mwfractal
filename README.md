@@ -6,6 +6,13 @@ mwfractal
 - automake
 - imagemagick++
 
+### build and run it in local docker
+```sh
+docker build -t mwfractal:asciiart --target asciiart . -f Dockerfile
+docker run --rm mwfractal:asciiart --colourizer 3 --iter 48
+# docker run --rm mwfractal:asciiart --help
+```
+
 ### Installation Instructions (debian) ###
 ./bootstrap  
 ./configure  
