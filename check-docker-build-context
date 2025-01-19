@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run --rm -t "$(docker build . -f Dockerfile --target check-build-context -q)" "$@"

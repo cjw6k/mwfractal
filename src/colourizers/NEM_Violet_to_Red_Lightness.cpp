@@ -108,19 +108,23 @@ bool NEM_Violet_to_Red_Lightness::run(){
             }
             next_pixel++;
 		}
-        this->_current_iteration += this->_px;
-        this->_temp = floor(this->_current_iteration / this->_progress_diff);
-        if(this->_temp > this->_progress){
-            while(this->_progress < this->_temp){
-                this->_progress++;
-                cout << ".";
+        if(!this->_opts->quiet){
+            this->_current_iteration += this->_px;
+            this->_temp = floor(this->_current_iteration / this->_progress_diff);
+            if(this->_temp > this->_progress){
+                while(this->_progress < this->_temp){
+                    this->_progress++;
+                    cout << ".";
+                }
+                cout.flush();
             }
-            cout.flush();
         }
     }
     this->_image.syncPixels();
 
-    cout << endl << endl << "Completed " << this->_total_iterations << " pixels" << endl;
+    if(!this->_opts->quiet){
+        cout << endl << endl << "Completed " << this->_total_iterations << " pixels" << endl;
+    }
     cout.flush();
 
     return true;
