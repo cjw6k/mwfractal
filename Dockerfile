@@ -19,9 +19,9 @@ ARG MAKE_VERSION=4.3-4.1
 ARG PKG_CONFIG_VERSION=1.8.1-1
 
 
-#
-# check-build-context
-#
+###
+### check-build-context
+###
 FROM alpine:${ALPINE_TAG}@${ALPINE_HASH} AS check-build-context
 
 ARG CONTEXT_EZA_VERSION
@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
  && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -r mw --g ${GID} \
- && useradd -r mw -g mw -m -u ${UID}
+ && useradd -l -r mw -g mw -m -u ${UID}
 
 WORKDIR /opt/mwfractal
 
@@ -78,6 +78,7 @@ RUN chown mw:mw /output
 USER mw
 
 ENTRYPOINT ["/usr/local/bin/mwfractal"]
+
 
 ###
 ### asciiart
