@@ -1,3 +1,6 @@
+ARG GID=1000
+ARG UID=1000
+
 ARG ALPINE_TAG=3.21.2
 ARG ALPINE_HASH=sha256:56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099
 
@@ -36,6 +39,9 @@ CMD ["--all", "--tree", "--icons"]
 ###
 FROM debian:${DEBIAN_TAG}@${DEBIAN_HASH} AS mwfractal
 
+ARG GID
+ARG UID
+
 ARG AUTOCONF_VERSION
 ARG AUTOMAKE_VERSION
 ARG BOOST_TAG
@@ -56,14 +62,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       pkg-config=${PKG_CONFIG_VERSION} \
  && rm -rf /var/lib/apt/lists/*
 
+RUN groupadd -r mw --g ${GID} \
+ && useradd -r mw -g mw -m -u ${UID}
+
 WORKDIR /opt/mwfractal
 
 COPY . .
 
+RUN chown -R mw:mw /opt/mwfractal
+
+USER mw
+
 RUN ./bootstrap && ./configure && make "-j$(nproc)"
 
 ENTRYPOINT ["/opt/mwfractal/mwfractal"]
-
 
 ###
 ### asciiart
@@ -72,8 +84,12 @@ FROM mwfractal AS asciiart
 
 ARG ASCIIART_VERSION
 
+USER root
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
       asciiart=${ASCIIART_VERSION} \
  && rm -rf /var/lib/apt/lists/*
+
+USER mw
 
 ENTRYPOINT ["./demo.sh"]
