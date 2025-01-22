@@ -26,10 +26,11 @@ jobs:
             core.exportVariable("ACTIONS_RUNTIME_URL", process.env["ACTIONS_RUNTIME_URL"])
 
       - name: build the image
-        run: docker buildx build \
-          --target mwfractal \
-          -t cjw6k/mwfractal \
-          -f Dockerfile \
-          --cache-to type=gha,scope=image \
-          --cache-from type=gha,scope=image \
-          .
+        run: |
+          docker buildx build \
+            --target mwfractal \
+            -t cjw6k/mwfractal \
+            -f Dockerfile \
+            --cache-to type=gha,scope=image \
+            --cache-from type=gha,scope=image \
+            .
