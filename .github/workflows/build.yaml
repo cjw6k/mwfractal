@@ -30,6 +30,6 @@ jobs:
           --target mwfractal \
           -t cjw6k/mwfractal \
           -f Dockerfile \
-          --cache-to type=gha,scope=image
-          --cache-from type=gha,scope=image
+          --cache-to type=gha,scope=image \
+          --cache-from type=gha,scope=image \
           .
