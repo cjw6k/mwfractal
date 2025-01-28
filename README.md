@@ -6,7 +6,7 @@
 ./dmwf-ascii
 ```
 
-![](/home/cjw/Projects/math/mwfractal/samples/promo.gif)
+![](samples/promo.gif)
 
 ### Generating Image Files
 Generated images will be found inside the `output/` directory.
