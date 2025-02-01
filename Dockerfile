@@ -4,19 +4,18 @@ ARG UID=1000
 ARG ALPINE_TAG=3.21.2
 ARG ALPINE_HASH=sha256:56fa17d2a7e7f168a043a2712e63aed1f8543aeafdcee47c58dcffe38ed51099
 
-ARG DEBIAN_TAG=12.9
-ARG DEBIAN_HASH=sha256:321341744acb788e251ebd374aecc1a42d60ce65da7bd4ee9207ff6be6686a62
+ARG DEBIAN_TAG=12.9-slim
+ARG DEBIAN_HASH=sha256:f70dc8d6a8b6a06824c92471a1a258030836b26b043881358b967bf73de7c5ab
 
 ARG ASCIIART_VERSION=0.0.10-2
-ARG AUTOCONF_VERSION=2.71-3
-ARG AUTOMAKE_VERSION=1:1.16.5-1.3
 ARG BOOST_TAG=1.81
+ARG BOOST_FULL_TAG=1.81.0
 ARG BOOST_VERSION=1.81.0-5+deb12u1
+ARG CLANG_VERSION=1:14.0-55.7~deb12u1
+ARG CMAKE_VERSION=3.25.1-1
 ARG CONTEXT_EZA_VERSION=0.20.12-r0
-ARG GPP_VERSION=4:12.2.0-3
 ARG MAGICK_VERSION=8:6.9.11.60+dfsg-1.6+deb12u2
-ARG MAKE_VERSION=4.3-4.1
-ARG PKG_CONFIG_VERSION=1.8.1-1
+ARG NINJA_VERSION=1.11.1-2~deb12u1
 
 
 ###
@@ -35,41 +34,63 @@ CMD ["--all", "--tree", "--icons"]
 
 
 ###
-### mwfractal
+### mwfractal-base
 ###
-FROM debian:${DEBIAN_TAG}@${DEBIAN_HASH} AS mwfractal
+FROM debian:${DEBIAN_TAG}@${DEBIAN_HASH} AS mwfractal-base
 
-ARG GID
-ARG UID
-
-ARG AUTOCONF_VERSION
-ARG AUTOMAKE_VERSION
-ARG BOOST_TAG
+ARG BOOST_FULL_TAG
 ARG BOOST_VERSION
-ARG GPP_VERSION
 ARG MAGICK_VERSION
-ARG MAKE_VERSION
-ARG PKG_CONFIG_VERSION
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      autoconf=${AUTOCONF_VERSION} \
-      automake=${AUTOMAKE_VERSION} \
-      g++=${GPP_VERSION} \
+    libboost-program-options${BOOST_FULL_TAG}=${BOOST_VERSION} \
+    libmagick++-6.q16-8=${MAGICK_VERSION} \
+ && rm -rf /var/lib/apt/lists/*
+
+
+###
+### mwfractal-builder
+###
+FROM mwfractal-base AS mwfractal-builder
+
+ARG BOOST_TAG
+ARG BOOST_VERSION
+ARG CLANG_VERSION
+ARG CMAKE_VERSION
+ARG MAGICK_VERSION
+ARG NINJA_VERSION
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      clang=${CLANG_VERSION} \
+      cmake=${CMAKE_VERSION} \
       libboost${BOOST_TAG}-dev=${BOOST_VERSION} \
       libboost-program-options${BOOST_TAG}-dev=${BOOST_VERSION} \
       libmagick++-dev=${MAGICK_VERSION} \
-      make=${MAKE_VERSION} \
-      pkg-config=${PKG_CONFIG_VERSION} \
+      ninja-build=${NINJA_VERSION} \
  && rm -rf /var/lib/apt/lists/*
-
-RUN groupadd -r mw --g ${GID} \
- && useradd -l -r mw -g mw -m -u ${UID}
 
 WORKDIR /opt/mwfractal
 
 COPY . .
 
-RUN ./bootstrap && ./configure && make "-j$(nproc)" && make install
+RUN mkdir build  \
+ && cd build  \
+ && cmake .. -G Ninja  \
+ && ninja
+
+
+###
+### mwfractal
+###
+FROM mwfractal-base AS mwfractal
+
+ARG GID
+ARG UID
+
+RUN groupadd -r mw --g ${GID} \
+ && useradd -l -r mw -g mw -m -u ${UID}
+
+COPY --from=mwfractal-builder /opt/mwfractal/build/mwfractal /usr/local/bin/mwfractal
 
 WORKDIR /output
 
@@ -81,9 +102,9 @@ ENTRYPOINT ["/usr/local/bin/mwfractal"]
 
 
 ###
-### asciiart
+### mwfractal-asciiart
 ###
-FROM mwfractal AS asciiart
+FROM mwfractal AS mwfractal-asciiart
 
 ARG ASCIIART_VERSION
 

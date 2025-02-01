@@ -1,6 +1,0 @@
-rm aclocal.m4
-rm autom4te.cache -r
-rm config.h.in
-rm config/*
-rm Makefile.in
-rm configure

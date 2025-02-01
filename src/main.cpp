@@ -17,7 +17,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "../config.h"
+#include "config.h"
 #include "ProgramOptions.hpp"
 #include "generators/JuliaPowExp.hpp"
 #include "generators/Julia3.hpp"
