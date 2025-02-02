@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -z "$(docker images -q mwfractal:asciiart 2> /dev/null)" ]; then
-  docker build -f Dockerfile . -t mwfractal:asciiart --target asciiart
+  docker build -f Dockerfile . -t mwfractal:asciiart --target mwfractal-asciiart
 fi
 
 docker run --rm -t mwfractal:asciiart "$@"

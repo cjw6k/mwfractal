@@ -28,4 +28,5 @@
             contributors that, like us, enjoy learning to generate fractal 
             imagery and helping to improve this product along the way.
 
- 
+2025-02-01: Chris containerized the app w/ Docker and converted the project from
+            make to cmake.

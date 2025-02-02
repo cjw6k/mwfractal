@@ -12,6 +12,8 @@
     See the License for the specific language governing permissions and
     limitations under the License. */
 
+#include <limits>
+
 #include "Colourizer.hpp"
 
 #include "../utils.hpp"
@@ -29,7 +31,7 @@ Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) :
 		_current_iteration(),
 		_progress(),
 		_palette_progress(),
-		_lo_iteration(0xFFFFFFFF),
+		_lo_iteration(std::numeric_limits<float>::max()),
 		_hi_iteration(),
 		_idy(),
 		_idx(),

@@ -1,10 +1,4 @@
 !samples/*.png
 .idea/
-*.png
-aclocal.m4
-autom4te.cache/
-config.h.in
-configure
-cov-int
-Makefile.in
-mwfractal.tgz
+./*.png
+cmake-build-debug/
