@@ -2,4 +2,3 @@
 .idea/
 ./*.png
 cmake-build-debug/
-cmake/config.h.in

@@ -3,15 +3,10 @@
 .github/
 .gitignore
 .idea/
-aclocal.m4
-autom4te.cache/
 check-docker-build-context
 cmake-build-debug/
-config.h.in
-configure
 dmwf
 dmwf-ascii
 Dockerfile
-Makefile.in
 output/
 samples/
