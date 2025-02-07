@@ -22,7 +22,7 @@ namespace JS{
 class NEM_White_to_Black : public Colourizer{
 
 public:
-    explicit NEM_White_to_Black(boost::shared_ptr<ProgramOptions> opts);
+    explicit NEM_White_to_Black(const boost::shared_ptr<ProgramOptions> &opts);
     NEM_White_to_Black(const NEM_White_to_Black& orig);
     ~NEM_White_to_Black() override;
     bool generatePalette() override;

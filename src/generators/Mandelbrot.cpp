@@ -17,7 +17,7 @@
 using namespace std;
 using namespace JS;
 
-Mandelbrot::Mandelbrot(boost::shared_ptr<ProgramOptions> opts)
+Mandelbrot::Mandelbrot(const boost::shared_ptr<ProgramOptions> &opts)
  : Generator(opts){
 }
 

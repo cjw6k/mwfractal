@@ -26,7 +26,7 @@ namespace JS{
 class Julia : public Generator{
 
 public:
-    explicit Julia(boost::shared_ptr<ProgramOptions> opts);
+    explicit Julia(const boost::shared_ptr<ProgramOptions> &opts);
     Julia(const Julia& orig);
     ~Julia() override;
 

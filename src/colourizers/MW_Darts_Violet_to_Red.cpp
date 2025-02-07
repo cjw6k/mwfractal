@@ -18,7 +18,7 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(  boost::shared_ptr<ProgramOptions> opts ) :
+MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(const boost::shared_ptr<ProgramOptions> &opts ) :
 		Colourizer( opts ),
 		_lo_score(),
 		_hi_score(),
@@ -27,7 +27,7 @@ MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(  boost::shared_ptr<ProgramOption
 		_ln_score_diff(),
 		_ln_pixel_score()
 	{
-	srand( time( NULL ) );
+	srand( time( nullptr ) );
 } 
 
 MW_Darts_Violet_to_Red::~MW_Darts_Violet_to_Red() {
@@ -107,16 +107,16 @@ bool MW_Darts_Violet_to_Red::run() {
                 this->_ln_pixel_score = static_cast<float>(log( this->_gamescores.at( this->_idy * this->_px + this->_idx ) + 1 ));
                 this->_frac_part = ( this->_ln_pixel_score - this->_ln_lo_score ) / this->_ln_score_diff;
                 if( this->_opts->invertspectrum ) {
-                    *next_pixel = this->_palette.at( palette_size - ( int )floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler ) - this->_opts->number_hue * ( int )floor( this->_opts->number_lightness * this->_frac_part ) );
+                    *next_pixel = this->_palette.at( palette_size - static_cast<int>(floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler ) ) - this->_opts->number_hue * static_cast<int>(floor( this->_opts->number_lightness * this->_frac_part ) ) );
                 } else {
-					*next_pixel = this->_palette.at( ( int )floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler ) + this->_opts->number_hue * ( int )floor( (this->_opts->number_lightness -1)  * this->_frac_part ) );
+					*next_pixel = this->_palette.at( static_cast<int>(floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler )) + this->_opts->number_hue * static_cast<int>(floor( (this->_opts->number_lightness -1)  * this->_frac_part ) ) );
                 }
             }
             next_pixel++;
         }
 		if(!this->_opts->quiet){
 			this->_current_iteration += this->_px;
-			this->_temp = floor( this->_current_iteration / this->_progress_diff );
+			this->_temp = floor( static_cast<float>(this->_current_iteration) / this->_progress_diff );
 			if( this->_temp > this->_progress ) {
 				while( this->_progress < this->_temp ) {
 					this->_progress++;
@@ -137,7 +137,7 @@ bool MW_Darts_Violet_to_Red::run() {
 }
 
 void MW_Darts_Violet_to_Red::generateScores() {
-    this->_gamescores.reserve( this->_px * this->_py );
+    this->_gamescores.reserve( static_cast<unsigned long>(this->_px) * this->_py );
 
     for( this->_idy = 0; this->_idy < this->_py; this->_idy++ ) {
         for( this->_idx = 0; this->_idx < this->_px; this->_idx++ ) {
@@ -149,8 +149,8 @@ void MW_Darts_Violet_to_Red::generateScores() {
     const auto max_score = ranges::max_element( this->_gamescores.begin(), this->_gamescores.end() );
     this->_lo_score = *min_score;
     this->_hi_score = *max_score;
-    this->_ln_lo_score = log( this->_lo_score + 1 );
-    this->_ln_hi_score = log( this->_hi_score + 1 );
+    this->_ln_lo_score = static_cast<float>(log( this->_lo_score + 1 ));
+    this->_ln_hi_score = static_cast<float>(log( this->_hi_score + 1 ));
 
     this->_ln_score_diff = this->_ln_hi_score - this->_ln_lo_score;
 }

@@ -17,7 +17,7 @@
 using namespace std;
 using namespace JS;
 
-Julia3::Julia3(boost::shared_ptr<ProgramOptions> opts)
+Julia3::Julia3(const boost::shared_ptr<ProgramOptions> &opts)
  : Julia(opts){
 }
 

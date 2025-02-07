@@ -22,7 +22,7 @@ namespace JS{
 class MW_Darts_Violet_to_Red : public Colourizer{
 
 public:
-    explicit MW_Darts_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts);
+    explicit MW_Darts_Violet_to_Red(const boost::shared_ptr<ProgramOptions> &opts);
     ~MW_Darts_Violet_to_Red() override;
     bool generatePalette() override;
     void generateScores();

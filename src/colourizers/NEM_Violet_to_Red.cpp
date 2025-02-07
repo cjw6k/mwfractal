@@ -18,7 +18,7 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-NEM_Violet_to_Red::NEM_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts)
+NEM_Violet_to_Red::NEM_Violet_to_Red(const boost::shared_ptr<ProgramOptions> &opts)
  : Colourizer(opts){
 }
 

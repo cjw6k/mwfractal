@@ -26,7 +26,7 @@ namespace JS{
 class Julia3 : public Julia{
 
 public:
-    explicit Julia3(boost::shared_ptr<ProgramOptions> opts);
+    explicit Julia3(const boost::shared_ptr<ProgramOptions> &opts);
     Julia3(const Julia3& orig);
     ~Julia3() override;
 

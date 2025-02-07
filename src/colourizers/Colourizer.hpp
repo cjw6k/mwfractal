@@ -31,7 +31,7 @@ namespace JS{
 class Colourizer{
 
 public:
-    explicit Colourizer(boost::shared_ptr<ProgramOptions> opts);
+    explicit Colourizer(const boost::shared_ptr<ProgramOptions> &opts);
     virtual ~Colourizer();
     virtual bool generatePalette();
 	bool paletteProgressTick(int current);

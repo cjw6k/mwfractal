@@ -22,7 +22,7 @@ namespace JS{
 class NEM_Violet_to_Red_Lightness : public Colourizer{
 
 public:
-    explicit NEM_Violet_to_Red_Lightness(boost::shared_ptr<ProgramOptions> opts);
+    explicit NEM_Violet_to_Red_Lightness(const boost::shared_ptr<ProgramOptions> &opts);
     NEM_Violet_to_Red_Lightness(const NEM_Violet_to_Red_Lightness& orig);
     ~NEM_Violet_to_Red_Lightness() override;
     bool generatePalette() override;

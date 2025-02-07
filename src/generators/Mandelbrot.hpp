@@ -26,7 +26,7 @@ namespace JS{
 class Mandelbrot : public Generator{
 
 public:
-    explicit Mandelbrot(boost::shared_ptr<ProgramOptions> opts);
+    explicit Mandelbrot(const boost::shared_ptr<ProgramOptions> &opts);
     Mandelbrot(const Mandelbrot& orig);
     ~Mandelbrot() override;
 

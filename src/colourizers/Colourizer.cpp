@@ -22,20 +22,20 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) : 
-		_opts(opts),
-		results(), 
+Colourizer::Colourizer(const boost::shared_ptr<ProgramOptions> &opts) :
+		results(),
 		orbits(),
+		_opts(opts),
 		_px(opts->width),
 		_py(opts->height),
+		_idy(),
+		_idx(),
 		_current_iteration(),
+		_temp(),
 		_progress(),
 		_palette_progress(),
 		_lo_iteration(std::numeric_limits<float>::max()),
 		_hi_iteration(),
-		_idy(),
-		_idx(),
-		_temp(),
 		_r(), 
 		_g(), 
 		_b(),
@@ -133,9 +133,9 @@ bool Colourizer::run(){
         for(this->_idx = 0; this->_idx < this->_px; this->_idx++){
             if((*this->results)[this->_idy][this->_idx] != -1){
                 if(this->_opts->invertspectrum){
-					*next_pixel = this->_palette[palette_size - (int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
+					*next_pixel = this->_palette[palette_size - static_cast<int>(round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler))];
 			    } else {
-                    *next_pixel = this->_palette[(int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
+                    *next_pixel = this->_palette[static_cast<int>(round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler))];
                 }
             }
             next_pixel++;

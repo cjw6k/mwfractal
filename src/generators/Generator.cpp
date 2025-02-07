@@ -17,7 +17,7 @@
 using namespace std;
 using namespace JS;
 
-Generator::Generator(boost::shared_ptr<ProgramOptions> opts) :
+Generator::Generator(const boost::shared_ptr<ProgramOptions> &opts) :
 		_opts(opts),
 		_c(),
 		_px(opts->width),
@@ -43,9 +43,9 @@ Generator::Generator(boost::shared_ptr<ProgramOptions> opts) :
     if(this->_py == 0){
 		this->_py = 1;
 	}
-    this->_dp_re = complex<float>((opts->max_re - opts->min_re) / opts->width, 0);
-    this->_dp_im = complex<float>(0, ( opts->max_im - opts->min_im) / opts->height);
-    this->_p = complex<float>(opts->min_re + this->_dp_re.real() / 2, opts->max_im - this->_dp_im.imag() / 2);
+    this->_dp_re = complex<float>(static_cast<float>(opts->max_re - opts->min_re) / static_cast<float>(opts->width), 0);
+    this->_dp_im = complex<float>(0, static_cast<float>(opts->max_im - opts->min_im) / static_cast<float>(opts->height));
+    this->_p = complex<float>(static_cast<float>(opts->min_re) + this->_dp_re.real() / 2, static_cast<float>(opts->max_im) - this->_dp_im.imag() / 2);
 
     this->_total_points = this->_px * this->_py;
 
@@ -150,7 +150,7 @@ void Generator::_postOrbit(){
         this->_iterate_fraction = log(this->_ln_cutoff / log(this->_zabs)) / this->_ln_2;
 //        this->_iterate_fraction = ( log( this->_zabs ) - this->_ln_cutoff ) / ( this->_opts->cutoff - this->_ln_cutoff );
         this->_argument = this->_idx + 1 + this->_iterate_fraction;
-        this->results[this->_row].push_back(this->_argument);
+        this->results[this->_row].push_back(static_cast<float>(this->_argument));
     } else {
         this->results[this->_row].push_back(-1);
     }
@@ -158,7 +158,7 @@ void Generator::_postOrbit(){
 
 void Generator::_postRow(){
     this->_p -= this->_dp_im;
-    this->_p = complex<float>(this->_opts->min_re, this->_p.imag());
+    this->_p = complex(static_cast<float>(this->_opts->min_re), this->_p.imag());
     this->_temp = floor(this->_current_point / this->_progress_diff);
 
 	this->_ppy++;
@@ -181,8 +181,8 @@ void Generator::_postRow(){
 }
 
 void Generator::_postColumn(){
-    this->_current_iteration += this->_opts->max_iterations;
-    this->_acc_iterations += this->_idx + 1;
+    this->_current_iteration += static_cast<float>(this->_opts->max_iterations);
+    this->_acc_iterations += static_cast<float>(this->_idx) + 1;
 
     this->_p += this->_dp_re;
     this->_current_point++;
@@ -201,7 +201,7 @@ void Generator::_postLoop(){
 
         float pc = 0;
         for(this->_uniq_itr = this->_uniques.begin(); this->_uniq_itr != this->_uniques.end(); ++this->_uniq_itr){
-            pc = floor(((*this->_uniq_itr).second / this->_total_points) * 100000) / 1000;
+            pc = static_cast<float>(floor(((*this->_uniq_itr).second / this->_total_points) * 100000) / 1000);
             cout << endl << "  " << (*this->_uniq_itr).first << ":\t" << (*this->_uniq_itr).second << "\t" << pc << "%" << endl;
         }
     }
