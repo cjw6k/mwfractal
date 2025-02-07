@@ -7,6 +7,7 @@ set_property(GLOBAL PROPERTY CMAKE_EXECUTE_TIMEOUT 90)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(FetchContent)
 
@@ -16,8 +17,6 @@ set(VERSION_PATCH 0)
 set(VERSION_PRE_RELEASE "-alpha")
 
 configure_file(cmake/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
-
-message("here: ${ImageMagick_INCLUDE_DIRS}")
 
 # Boost
 find_package(Boost REQUIRED COMPONENTS program_options)
@@ -29,9 +28,9 @@ add_definitions(-DMAGICKCORE_HDRI_ENABLE=0)
 
 include_directories(
     PRIVATE
-    ${PROJECT_BINARY_DIR}
-    ${Boost_INCLUDE_DIRS}
-    ${ImageMagick_INCLUDE_DIRS}
+        ${PROJECT_BINARY_DIR}
+        ${Boost_INCLUDE_DIRS}
+        ${ImageMagick_INCLUDE_DIRS}
 )
 
 add_executable(
@@ -54,8 +53,8 @@ add_executable(
 target_link_libraries(
     mwfractal
     PRIVATE
-    Boost::program_options
-    ${ImageMagick_LIBRARIES}
+        Boost::program_options
+        ${ImageMagick_LIBRARIES}
 )
 
 string(TIMESTAMP ts)

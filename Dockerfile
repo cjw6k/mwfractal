@@ -11,9 +11,10 @@ ARG ASCIIART_VERSION=0.0.10-2
 ARG BOOST_TAG=1.81
 ARG BOOST_FULL_TAG=1.81.0
 ARG BOOST_VERSION=1.81.0-5+deb12u1
-ARG CLANG_VERSION=1:14.0-55.7~deb12u1
+ARG CLANG_VERSION=1:19.1.4-1~deb12u1
 ARG CMAKE_VERSION=3.25.1-1
 ARG CONTEXT_EZA_VERSION=0.20.12-r0
+ARG LLVM_SUFFIX=-19
 ARG MAGICK_VERSION=8:6.9.11.60+dfsg-1.6+deb12u2
 ARG NINJA_VERSION=1.11.1-2~deb12u1
 
@@ -42,7 +43,7 @@ ARG BOOST_FULL_TAG
 ARG BOOST_VERSION
 ARG MAGICK_VERSION
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y --no-install-recommends \
     libboost-program-options${BOOST_FULL_TAG}=${BOOST_VERSION} \
     libmagick++-6.q16-8=${MAGICK_VERSION} \
  && rm -rf /var/lib/apt/lists/*
@@ -55,13 +56,15 @@ FROM mwfractal-base AS mwfractal-builder
 
 ARG BOOST_TAG
 ARG BOOST_VERSION
+ARG LLVM_SUFFIX
 ARG CLANG_VERSION
 ARG CMAKE_VERSION
 ARG MAGICK_VERSION
 ARG NINJA_VERSION
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      clang=${CLANG_VERSION} \
+RUN DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y --no-install-recommends \
+      clang${LLVM_SUFFIX}=${CLANG_VERSION} \
+      clang-tidy${LLVM_SUFFIX}=${CLANG_VERSION} \
       cmake=${CMAKE_VERSION} \
       libboost${BOOST_TAG}-dev=${BOOST_VERSION} \
       libboost-program-options${BOOST_TAG}-dev=${BOOST_VERSION} \
@@ -69,14 +72,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ninja-build=${NINJA_VERSION} \
  && rm -rf /var/lib/apt/lists/*
 
+ENV PATH="$PATH:/usr/lib/llvm${LLVM_SUFFIX}/bin"
+
 WORKDIR /opt/mwfractal
 
 COPY . .
 
 RUN mkdir build  \
  && cd build  \
- && cmake .. -G Ninja  \
- && ninja
+ && cmake .. -G Ninja \
+ && ninja \
+ && clang-tidy -p compile_commands.json ../src/main.cpp
 
 
 ###
@@ -110,7 +116,7 @@ ARG ASCIIART_VERSION
 
 USER root
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN DEBIAN_FRONTEND=noninteractive && apt-get update && apt-get install -y --no-install-recommends \
       asciiart=${ASCIIART_VERSION} \
  && rm -rf /var/lib/apt/lists/*
 
