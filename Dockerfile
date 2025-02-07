@@ -55,6 +55,7 @@ FROM mwfractal-base AS mwfractal-builder
 
 ARG BOOST_TAG
 ARG BOOST_VERSION
+ARG LLVM_SUFFIX
 ARG CLANG_VERSION
 ARG CMAKE_VERSION
 ARG MAGICK_VERSION
@@ -62,6 +63,7 @@ ARG NINJA_VERSION
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       clang=${CLANG_VERSION} \
+      clang-tidy=${CLANG_VERSION} \
       cmake=${CMAKE_VERSION} \
       libboost${BOOST_TAG}-dev=${BOOST_VERSION} \
       libboost-program-options${BOOST_TAG}-dev=${BOOST_VERSION} \
@@ -69,14 +71,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ninja-build=${NINJA_VERSION} \
  && rm -rf /var/lib/apt/lists/*
 
+ENV PATH="$PATH:/usr/lib/llvm${LLVM_SUFFIX}/bin"
+
 WORKDIR /opt/mwfractal
 
 COPY . .
 
 RUN mkdir build  \
  && cd build  \
- && cmake .. -G Ninja  \
- && ninja
+ && cmake .. -G Ninja \
+ && ninja \
+ && clang-tidy -p compile_commands.json ../src/main.cpp
 
 
 ###
