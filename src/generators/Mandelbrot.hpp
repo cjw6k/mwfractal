@@ -26,15 +26,15 @@ namespace JS{
 class Mandelbrot : public Generator{
 
 public:
-    Mandelbrot(boost::shared_ptr<ProgramOptions> opts);
+    explicit Mandelbrot(boost::shared_ptr<ProgramOptions> opts);
     Mandelbrot(const Mandelbrot& orig);
-    virtual ~Mandelbrot();
+    ~Mandelbrot() override;
 
 private:
 
 protected:
-    void _iterate();
-    void _preOrbit();
+    void _iterate() override;
+    void _preOrbit() override;
 
 };
 

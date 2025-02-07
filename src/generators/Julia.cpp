@@ -18,11 +18,11 @@ using namespace std;
 using namespace JS;
 
 Julia::Julia(boost::shared_ptr<ProgramOptions> opts)
- : Generator::Generator(opts){
+ : Generator(opts){
 }
 
 Julia::Julia(const Julia& orig)
- : Generator::Generator(orig){
+ : Generator(orig){
 }
 
 Julia::~Julia(){

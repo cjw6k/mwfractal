@@ -20,11 +20,11 @@ using namespace Magick;
 using namespace std;
 
 NEM_Violet_to_Red_Lightness::NEM_Violet_to_Red_Lightness(boost::shared_ptr<ProgramOptions> opts)
- : Colourizer::Colourizer(opts){
+ : Colourizer(opts){
 }
 
 NEM_Violet_to_Red_Lightness::NEM_Violet_to_Red_Lightness(const NEM_Violet_to_Red_Lightness& orig)
- : Colourizer::Colourizer(orig){
+ : Colourizer(orig){
 }
 
 NEM_Violet_to_Red_Lightness::~NEM_Violet_to_Red_Lightness(){
@@ -91,7 +91,7 @@ bool NEM_Violet_to_Red_Lightness::generatePalette(){
 }
 
 bool NEM_Violet_to_Red_Lightness::run(){
-	int palette_size = this->_palette.size() - 1;
+	const unsigned int palette_size = this->_palette.size() - 1;
 
     PixelPacket *pixel_cache = this->_image.getPixels(0, 0, this->_px, this->_py);
     PixelPacket *next_pixel = pixel_cache;

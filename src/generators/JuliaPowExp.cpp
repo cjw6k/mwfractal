@@ -18,11 +18,11 @@ using namespace std;
 using namespace JS;
 
 JuliaPowExp::JuliaPowExp(boost::shared_ptr<ProgramOptions> opts)
- : Julia::Julia(opts){
+ : Julia(opts){
 }
 
 JuliaPowExp::JuliaPowExp(const JuliaPowExp& orig)
- : Julia::Julia(orig){
+ : Julia(orig){
 }
 
 JuliaPowExp::~JuliaPowExp(){

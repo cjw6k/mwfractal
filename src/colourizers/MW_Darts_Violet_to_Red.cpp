@@ -19,7 +19,7 @@ using namespace Magick;
 using namespace std;
 
 MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(  boost::shared_ptr<ProgramOptions> opts ) :
-		Colourizer::Colourizer( opts ),
+		Colourizer( opts ),
 		_lo_score(),
 		_hi_score(),
 		_ln_lo_score(),
@@ -34,10 +34,10 @@ MW_Darts_Violet_to_Red::~MW_Darts_Violet_to_Red() {
 }
 
 bool MW_Darts_Violet_to_Red::generatePalette() {
-    this->_palette_progress_diff = (float)this->_opts->number_lightness / 80;
+    this->_palette_progress_diff = static_cast<float>(this->_opts->number_lightness) / 80;
     this->_s = 1.0;
 
-	this->_palette.reserve( this->_opts->number_lightness * this->_opts->number_hue );
+	this->_palette.reserve( static_cast<unsigned long>(this->_opts->number_lightness) * this->_opts->number_hue );
 
     for( this->_idy = 0; this->_idy < this->_opts->number_lightness; this->_idy++ ) {
         this->_l = this->_lightness_diff / this->_opts->number_lightness * ( this->_idy + 0.5 ) + this->_opts->lightness_min;
@@ -96,7 +96,7 @@ bool MW_Darts_Violet_to_Red::generatePalette() {
 bool MW_Darts_Violet_to_Red::run() {
     this->generateScores();
 
-    int palette_size = this->_palette.size() - 1;
+    const unsigned int palette_size = this->_palette.size() - 1;
 
     PixelPacket *pixel_cache = this->_image.getPixels( 0, 0, this->_px, this->_py );
     PixelPacket *next_pixel = pixel_cache;
@@ -104,7 +104,7 @@ bool MW_Darts_Violet_to_Red::run() {
     for( this->_idy = 0; this->_idy < this->_py; this->_idy++ ) {
         for( this->_idx = 0; this->_idx < this->_px; this->_idx++ ) {
             if( (*this->results)[this->_idy][this->_idx] != -1 ) {
-                this->_ln_pixel_score = log( this->_gamescores.at( this->_idy * this->_px + this->_idx ) + 1 );
+                this->_ln_pixel_score = static_cast<float>(log( this->_gamescores.at( this->_idy * this->_px + this->_idx ) + 1 ));
                 this->_frac_part = ( this->_ln_pixel_score - this->_ln_lo_score ) / this->_ln_score_diff;
                 if( this->_opts->invertspectrum ) {
                     *next_pixel = this->_palette.at( palette_size - ( int )floor( ( (*this->results)[this->_idy][this->_idx] - this->_lo_iteration ) * this->_colour_scaler ) - this->_opts->number_hue * ( int )floor( this->_opts->number_lightness * this->_frac_part ) );
@@ -145,9 +145,8 @@ void MW_Darts_Violet_to_Red::generateScores() {
         }
     }
 
-    std::vector<int>::iterator min_score, max_score;
-    min_score = min_element( this->_gamescores.begin(), this->_gamescores.end() );
-    max_score = max_element( this->_gamescores.begin(), this->_gamescores.end() );
+    const auto min_score = ranges::min_element( this->_gamescores.begin(), this->_gamescores.end() );
+    const auto max_score = ranges::max_element( this->_gamescores.begin(), this->_gamescores.end() );
     this->_lo_score = *min_score;
     this->_hi_score = *max_score;
     this->_ln_lo_score = log( this->_lo_score + 1 );
@@ -158,15 +157,14 @@ void MW_Darts_Violet_to_Red::generateScores() {
 
 int MW_Darts_Violet_to_Red::game() {
     int score = 0;
-    vector<complex<float> >::iterator orbit_itr;
-    for( orbit_itr = this->orbits->at(this->_idy).at(this->_idx).begin(); orbit_itr != this->orbits->at(this->_idy).at(this->_idx).end(); orbit_itr++ ) {
+    for( auto orbit_itr = this->orbits->at(this->_idy).at(this->_idx).begin(); orbit_itr != this->orbits->at(this->_idy).at(this->_idx).end(); ++orbit_itr ) {
         score += this->getScore( (*orbit_itr) );
     }
 
     return score;
 }
 
-int MW_Darts_Violet_to_Red::getScore( std::complex<float> shot ) {
+int MW_Darts_Violet_to_Red::getScore( const std::complex<float> shot ) {
 //  The radii of a dart board are as follows:
 //  (Presume the bullseye radius is given by "bullseye")
 //  -bullsring = 2.5 * bullseye
@@ -175,12 +173,12 @@ int MW_Darts_Violet_to_Red::getScore( std::complex<float> shot ) {
 //  -inner double ring = 25 * bullseye
 //  -outer double ring = 26.5 * bullseye
 
-    float bullseye = 0.5;
+    constexpr float bullseye = 0.5;
     if( abs( shot ) > 26.5 * bullseye ) return 0;
     if( abs( shot ) < bullseye ) return 50;
     if( abs( shot ) < 2.5 * bullseye ) return 25;
 
-    int phase_index = ( int )ceil( arg( shot ) * 20 / M_PI );
+    const int phase_index = static_cast<int>(ceil(arg(shot) * 20 / M_PI));
     int score = 0;
 
     switch( phase_index ) {

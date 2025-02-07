@@ -18,11 +18,11 @@ using namespace std;
 using namespace JS;
 
 Mandelbrot::Mandelbrot(boost::shared_ptr<ProgramOptions> opts)
- : Generator::Generator(opts){
+ : Generator(opts){
 }
 
 Mandelbrot::Mandelbrot(const Mandelbrot& orig)
- : Generator::Generator(orig){
+ : Generator(orig){
 }
 
 Mandelbrot::~Mandelbrot(){

@@ -26,15 +26,15 @@ namespace JS{
 class JuliaPowExp : public Julia{
 
 public:
-    JuliaPowExp(boost::shared_ptr<ProgramOptions> opts);
+    explicit JuliaPowExp(boost::shared_ptr<ProgramOptions> opts);
     JuliaPowExp(const JuliaPowExp& orig);
-    virtual ~JuliaPowExp();
+    ~JuliaPowExp() override;
 
 private:
 
 protected:
-    void _iterate();
-	void _postOrbit();
+    void _iterate() override;
+	void _postOrbit() override;
     
 
 };

@@ -19,11 +19,11 @@ using namespace Magick;
 using namespace std;
 
 NEM_Violet_to_Red::NEM_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts)
- : Colourizer::Colourizer(opts){
+ : Colourizer(opts){
 }
 
 NEM_Violet_to_Red::NEM_Violet_to_Red(const NEM_Violet_to_Red& orig)
- : Colourizer::Colourizer(orig){
+ : Colourizer(orig){
 }
 
 NEM_Violet_to_Red::~NEM_Violet_to_Red(){

@@ -49,21 +49,20 @@ Generator::Generator(boost::shared_ptr<ProgramOptions> opts) :
 
     this->_total_points = this->_px * this->_py;
 
-    this->_progress_diff = (float)this->_total_points / 80;
+    this->_progress_diff = static_cast<float>(this->_total_points) / 80;
     this->_ln_2 = log(2.0);
     this->_ln_cutoff = log(this->_opts->cutoff);
 
-    int idy;
     this->results.resize(this->_py);
-    for(idy = 0; idy < this->_py; idy++){
+    for(auto idy = 0; idy < this->_py; idy++){
             this->results[idy].reserve(this->_px);
     }
-    int idx;
+
     if(!this->_opts->skiporbits){
         this->orbits.resize(this->_py);
-        for(idy = 0; idy < this->_py; idy++){
+        for(auto idy = 0; idy < this->_py; idy++){
             this->orbits[idy].resize(this->_px);
-            for(idx = 0; idx < this->_px; idx++){
+            for(auto idx = 0; idx < this->_px; idx++){
                 this->orbits[idy][idx].reserve(this->_opts->max_iterations);
             }
         }
@@ -201,20 +200,17 @@ void Generator::_postLoop(){
         cout << "Unique escape times with number of occurences:" << endl;
 
         float pc = 0;
-        for(this->_uniq_itr = this->_uniques.begin(); this->_uniq_itr != this->_uniques.end(); this->_uniq_itr++){
+        for(this->_uniq_itr = this->_uniques.begin(); this->_uniq_itr != this->_uniques.end(); ++this->_uniq_itr){
             pc = floor(((*this->_uniq_itr).second / this->_total_points) * 100000) / 1000;
             cout << endl << "  " << (*this->_uniq_itr).first << ":\t" << (*this->_uniq_itr).second << "\t" << pc << "%" << endl;
         }
     }
 
     if(this->_opts->showorbits){
-        vector<vector<vector<complex<float> > > >::iterator row_itr;
-        vector<vector<complex<float> > >::iterator col_itr;
-        vector<complex<float> >::iterator orbit_itr;
         cout << endl << "Orbits of each point:" << endl;
-        for(row_itr = this->orbits.begin(); row_itr != this->orbits.end(); row_itr++){
-            for(col_itr = (*row_itr).begin(); col_itr != (*row_itr).end(); col_itr++){
-                for(orbit_itr = (*col_itr).begin(); orbit_itr != (*col_itr).end(); orbit_itr++){
+        for(auto row_itr = this->orbits.begin(); row_itr != this->orbits.end(); ++row_itr){
+            for(auto col_itr = (*row_itr).begin(); col_itr != (*row_itr).end(); ++col_itr){
+                for(auto orbit_itr = (*col_itr).begin(); orbit_itr != (*col_itr).end(); ++orbit_itr){
                     cout << "[" << row_itr - this->orbits.begin() << "," << col_itr - (*row_itr).begin() << "]-orbit[" << orbit_itr - (*col_itr).begin() << "]: " << (*orbit_itr) << endl;
                 }
                 cout << endl;
@@ -223,11 +219,9 @@ void Generator::_postLoop(){
     }
 
     if(this->_opts->showresults){
-        vector<vector<float> >::iterator row_itr;
-        vector<float>::iterator col_itr;
         cout << endl << "Results for each point:" << endl << endl;
-        for(row_itr = this->results.begin(); row_itr != this->results.end(); row_itr++){
-            for(col_itr = (*row_itr).begin(); col_itr != (*row_itr).end(); col_itr++){
+        for(auto row_itr = this->results.begin(); row_itr != this->results.end(); ++row_itr){
+            for(auto col_itr = (*row_itr).begin(); col_itr != (*row_itr).end(); ++col_itr){
                     cout << "[" << row_itr - this->results.begin() << "," << col_itr - (*row_itr).begin() << "]: " << (*col_itr) << endl;
             }
         }

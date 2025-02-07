@@ -26,16 +26,16 @@ namespace JS{
 class Julia : public Generator{
 
 public:
-    Julia(boost::shared_ptr<ProgramOptions> opts);
+    explicit Julia(boost::shared_ptr<ProgramOptions> opts);
     Julia(const Julia& orig);
-    virtual ~Julia();
+    ~Julia() override;
 
 private:
 
 protected:
-    void _iterate();
-    void _preLoop();
-    void _preOrbit();
+    void _iterate() override;
+    void _preLoop() override;
+    void _preOrbit() override;
     
 
 };

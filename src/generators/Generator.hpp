@@ -29,7 +29,7 @@ namespace JS{
 class Generator{
 
 public:
-    Generator(boost::shared_ptr<ProgramOptions> opts);
+    explicit Generator(boost::shared_ptr<ProgramOptions> opts);
     virtual ~Generator();
     virtual bool run();
     std::vector<std::vector<float> > results;

@@ -19,11 +19,11 @@ using namespace Magick;
 using namespace std;
 
 NEM_White_to_Black::NEM_White_to_Black(boost::shared_ptr<ProgramOptions> opts)
- : Colourizer::Colourizer(opts){
+ : Colourizer(opts){
 }
 
 NEM_White_to_Black::NEM_White_to_Black(const NEM_White_to_Black& orig)
- : Colourizer::Colourizer(orig){
+ : Colourizer(orig){
 }
 
 NEM_White_to_Black::~NEM_White_to_Black(){

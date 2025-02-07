@@ -64,8 +64,8 @@ Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) :
 	}
 
     this->_total_iterations = this->_px * this->_py;
-    this->_progress_diff = (float)this->_total_iterations / 80;
-    this->_palette_progress_diff = (float)opts->number_hue / 80;
+    this->_progress_diff = static_cast<float>(this->_total_iterations) / 80;
+    this->_palette_progress_diff = static_cast<float>(opts->number_hue) / 80;
     InitializeMagick("");
 	this->_image = Image(Geometry(this->_px, this->_py), opts->convergecolour);
     this->_image.type(TrueColorType);
@@ -76,10 +76,9 @@ Colourizer::~Colourizer(){
 
 void Colourizer::setResults(std::vector<std::vector<float> >* results){
     this->results = results;
-	std::vector<float>::iterator min_temp, max_temp;
     for(this->_idy = 0; this->_idy < this->_py; this->_idy++){
-        min_temp = min_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end(), findmin);
-        max_temp = max_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end());
+        auto min_temp = ranges::min_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end(), findmin);
+        auto max_temp = ranges::max_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end());
 		if(this->_lo_iteration > (*min_temp)){
             this->_lo_iteration = (*min_temp);
         }
@@ -96,7 +95,7 @@ void Colourizer::setResults(std::vector<std::vector<float> >* results){
 		this->_hi_iteration = this->_opts->high_escape;
 	}
 	
-    this->_colour_scaler = (this->_opts->number_hue - 1) / (this->_hi_iteration - this->_lo_iteration);
+    this->_colour_scaler = static_cast<double>(this->_opts->number_hue - 1) / static_cast<double>(this->_hi_iteration - this->_lo_iteration);
 }
 
 void Colourizer::setOrbits(std::vector<std::vector<std::vector<std::complex<float> > > >* orbits){
@@ -107,8 +106,8 @@ bool Colourizer::generatePalette(){
     return false;
 }
 
-bool Colourizer::paletteProgressTick(int current){
-        this->_temp = ceil(current / this->_palette_progress_diff);
+bool Colourizer::paletteProgressTick(const int current){
+        this->_temp = ceil(static_cast<float>(current) / this->_palette_progress_diff);
         if(this->_temp > this->_palette_progress){
             while(this->_palette_progress < this->_temp){
                 this->_palette_progress++;
@@ -125,7 +124,7 @@ bool Colourizer::paletteProgressTick(int current){
 }
 
 bool Colourizer::run(){
-	int palette_size = this->_palette.size() - 1;
+	const unsigned int palette_size = this->_palette.size() - 1;
 
     PixelPacket *pixel_cache = this->_image.getPixels(0, 0, this->_px, this->_py);
     PixelPacket *next_pixel = pixel_cache;
@@ -142,7 +141,7 @@ bool Colourizer::run(){
             next_pixel++;
         }
         this->_current_iteration += this->_px;
-        this->_temp = floor(this->_current_iteration / this->_progress_diff);
+        this->_temp = floor(static_cast<float>(this->_current_iteration) / this->_progress_diff);
         if(this->_temp > this->_progress){
             while(this->_progress < this->_temp){
                 this->_progress++;
@@ -170,6 +169,6 @@ void Colourizer::writeImage(const char* filename){
     this->_image.write(filename);
 }
 
-void Colourizer::profile(){
+void Colourizer::profile() const {
 	cout << this->_lo_iteration << ":" << this->_hi_iteration << endl;
 }

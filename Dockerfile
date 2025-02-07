@@ -82,7 +82,7 @@ RUN mkdir build  \
  && cd build  \
  && cmake .. -G Ninja \
  && ninja \
- && clang-tidy -p compile_commands.json ../src/main.cpp
+ && clang-tidy -p compile_commands.json ../src/*.cpp ../src/*/*.cpp
 
 
 ###

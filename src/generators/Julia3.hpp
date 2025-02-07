@@ -26,14 +26,14 @@ namespace JS{
 class Julia3 : public Julia{
 
 public:
-    Julia3(boost::shared_ptr<ProgramOptions> opts);
+    explicit Julia3(boost::shared_ptr<ProgramOptions> opts);
     Julia3(const Julia3& orig);
-    virtual ~Julia3();
+    ~Julia3() override;
 
 private:
 
 protected:
-    void _iterate();    
+    void _iterate() override;
 
 };
 

@@ -28,9 +28,10 @@ public:
 
     bool showuniques, showresults, autoopen, showorbits, skiporbits, invertspectrum, quiet, profile;
     int max_iterations, colourizer, generator, number_hue, number_lightness, width, height;
+    float low_escape, high_escape;
 	double g4_power, g4_exponent;
     double max_re, max_im, min_re, min_im, cutoff, cr, ci;
-    double spectral_min, spectral_max, lightness_min, lightness_max, colour_weighting, low_escape, high_escape;
+    double spectral_min, spectral_max, lightness_min, lightness_max, colour_weighting;
     std::string output_filename, fileformat, convergecolour;
 
 private:

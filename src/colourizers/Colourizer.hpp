@@ -31,7 +31,7 @@ namespace JS{
 class Colourizer{
 
 public:
-    Colourizer(boost::shared_ptr<ProgramOptions> opts);
+    explicit Colourizer(boost::shared_ptr<ProgramOptions> opts);
     virtual ~Colourizer();
     virtual bool generatePalette();
 	bool paletteProgressTick(int current);
@@ -39,12 +39,10 @@ public:
     void setResults(std::vector<std::vector<float> >* results);
     void setOrbits(std::vector<std::vector<std::vector<std::complex<float> > > >* orbits);
     void writeImage(const char* filename);
-	void profile();
+	void profile() const;
 	
     std::vector<std::vector<float> >* results;
     std::vector<std::vector<std::vector<std::complex<float> > > >* orbits;
-
-private:
 
 protected:
     boost::shared_ptr<ProgramOptions> _opts;
