@@ -31,13 +31,37 @@
 using namespace std;
 using namespace JS;
 
+void handleException(const std::exception& exception) {
+  cout << "Exception: " << exception.what() << endl;
+  exit(EXIT_FAILURE);
+}
+
+std::string generateFilename(const boost::shared_ptr<ProgramOptions>& opts) {
+	std::ostringstream filename;
+	if (opts->output_filename.empty()) {
+		filename << "fractal-cl(" << opts->colourizer << ")_g(" << opts->generator << ")"
+				 << "_c(" << opts->cr << "," << opts->ci << ")"
+				 << "_dp(" << (opts->max_re - opts->min_re) / opts->width << ","
+				 << (opts->max_im - opts->min_im) / opts->height << ")"
+				 << "_i(" << opts->max_iterations << ")"
+				 << "_s(" << (opts->max_re - opts->min_re) << ","
+				 << (opts->max_im - opts->min_im) << ")"
+				 << "_o(" << (opts->max_re + opts->min_re) / 2 << ","
+				 << (opts->max_im + opts->min_im) / 2 << ")"
+				 << "." << opts->fileformat;
+	} else {
+		filename << opts->output_filename;
+	}
+
+	return filename.str();
+}
+
 int main(int argc, char** argv){
     boost::shared_ptr<ProgramOptions> opts;
 	try {
 		opts.reset( new ProgramOptions(argc, argv));
 	} catch (exception e){
-        cout << " (!) " << e.what() << endl;
-        exit(EXIT_FAILURE);		
+        handleException(e);
 	}
     if(opts->getStatus() != 0){
         if(opts->getStatus() > 1){
@@ -61,7 +85,7 @@ int main(int argc, char** argv){
 		case 3:
             generator.reset(new Julia3(opts));
             break;
-			
+
 		case 4:
             generator.reset(new JuliaPowExp(opts));
             break;
@@ -149,44 +173,28 @@ int main(int argc, char** argv){
 	    cout << endl << "Writing File '";
 	}
     try {
-        ostringstream filename;
-        if(opts->output_filename.empty()){
-            filename << "fractal-cl(" << opts->colourizer << ")";
-            filename << "_g(" << opts->generator << ")";
-            filename << "_c(" << opts->cr << "," << opts->ci << ")";
-            filename << "_dp(" << (opts->max_re - opts->min_re) / opts->width << "," << (opts->max_im - opts->min_im) / opts->height << ")";
-            filename << "_i(" << opts->max_iterations << ")";
-            filename << "_s(" << ( opts->max_re - opts->min_re ) << "," << ( opts->max_im - opts->min_im ) << ")";
-            filename << "_o(" << ( opts->max_re + opts->min_re ) / 2 << "," << ( opts->max_im + opts->min_im ) / 2 << ")";
-            filename << "." << opts->fileformat;
-        } else {
-            filename << opts->output_filename;
-        }
+        auto filename = generateFilename(opts);
+
 		if(!opts->quiet){
-	        cout << filename.str() << "' ... ";
+	        cout << filename << "' ... ";
 	        cout.flush();
 		}
 
-        colourizer->writeImage(filename.str().c_str());
+        colourizer->writeImage(filename.c_str());
         if(!opts->quiet){
 			cout << "Done!" << endl << endl;
 		}
 
         if(opts->autoopen){
             ostringstream cmd;
-            cmd << "xdg-open \"" << filename.str() << "\" 2>/dev/null &";
+            cmd << "xdg-open \"" << filename << "\" 2>/dev/null &";
 
-            bool returned = system(cmd.str().c_str());
-			if(returned){
+			if(system(cmd.str().c_str()) != 0){
 				exit(EXIT_FAILURE);
 			}
         }
-    } catch(Magick::WarningCoder &e){
-        cout << " (!) " << e.what() << endl;
-        exit(EXIT_FAILURE);
     } catch(exception e){
-        cout << " (!) " << e.what() << endl;
-        exit(EXIT_FAILURE);
+        handleException(e);
 	}
 
     exit(EXIT_SUCCESS);
