@@ -1,7 +1,7 @@
 Checks: >
   -*,
   bugprone-*,
-  readability-*
+  cppcoreguidelines-*,
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'

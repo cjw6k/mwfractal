@@ -17,15 +17,8 @@
 using namespace std;
 using namespace JS;
 
-Mandelbrot::Mandelbrot(boost::shared_ptr<ProgramOptions> opts)
- : Generator::Generator(opts){
-}
-
-Mandelbrot::Mandelbrot(const Mandelbrot& orig)
- : Generator::Generator(orig){
-}
-
-Mandelbrot::~Mandelbrot(){
+Mandelbrot::Mandelbrot(const boost::shared_ptr<ProgramOptions> &opts)
+ : Generator(opts){
 }
 
 void Mandelbrot::_preOrbit(){

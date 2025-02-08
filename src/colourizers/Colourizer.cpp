@@ -22,20 +22,20 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) : 
-		_opts(opts),
-		results(), 
+Colourizer::Colourizer(const boost::shared_ptr<ProgramOptions> &opts) :
+		results(),
 		orbits(),
+		_opts(opts),
 		_px(opts->width),
 		_py(opts->height),
+		_idy(),
+		_idx(),
 		_current_iteration(),
+		_temp(),
 		_progress(),
 		_palette_progress(),
 		_lo_iteration(std::numeric_limits<float>::max()),
 		_hi_iteration(),
-		_idy(),
-		_idx(),
-		_temp(),
 		_r(), 
 		_g(), 
 		_b(),
@@ -47,13 +47,12 @@ Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) :
 		_m(),
 		_frac_part(),
 		_ones_digit(),
-		_colour_scaler()
+		_spectral_diff(opts->spectral_max - opts->spectral_min),
+		_lightness_diff(opts->lightness_max - opts->lightness_min),
+		_colour_scaler(),
+		_arctan_horiz_scaler(opts->colour_weighting / opts->number_hue),
+		_arctan_vert_scaler(atan(opts->colour_weighting))
 	{
-    
-    this->_spectral_diff = opts->spectral_max - opts->spectral_min;
-    this->_lightness_diff = opts->lightness_max - opts->lightness_min;
-    this->_arctan_horiz_scaler = opts->colour_weighting / opts->number_hue;
-    this->_arctan_vert_scaler = atan(opts->colour_weighting);
 
     if(this->_px == 0){
 		this->_px = 1;
@@ -64,8 +63,8 @@ Colourizer::Colourizer(boost::shared_ptr<ProgramOptions> opts) :
 	}
 
     this->_total_iterations = this->_px * this->_py;
-    this->_progress_diff = (float)this->_total_iterations / 80;
-    this->_palette_progress_diff = (float)opts->number_hue / 80;
+    this->_progress_diff = static_cast<float>(this->_total_iterations) / 80;
+    this->_palette_progress_diff = static_cast<float>(opts->number_hue) / 80;
     InitializeMagick("");
 	this->_image = Image(Geometry(this->_px, this->_py), opts->convergecolour);
     this->_image.type(TrueColorType);
@@ -76,10 +75,9 @@ Colourizer::~Colourizer(){
 
 void Colourizer::setResults(std::vector<std::vector<float> >* results){
     this->results = results;
-	std::vector<float>::iterator min_temp, max_temp;
     for(this->_idy = 0; this->_idy < this->_py; this->_idy++){
-        min_temp = min_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end(), findmin);
-        max_temp = max_element((*this->results)[this->_idy].begin(), (*this->results)[this->_idy].end());
+        std::vector<float>::iterator min_temp = min_element((*this->results)[this->_idy].begin(),(*this->results)[this->_idy].end(), findmin);
+        std::vector<float>::iterator max_temp = max_element((*this->results)[this->_idy].begin(),(*this->results)[this->_idy].end());
 		if(this->_lo_iteration > (*min_temp)){
             this->_lo_iteration = (*min_temp);
         }
@@ -96,7 +94,7 @@ void Colourizer::setResults(std::vector<std::vector<float> >* results){
 		this->_hi_iteration = this->_opts->high_escape;
 	}
 	
-    this->_colour_scaler = (this->_opts->number_hue - 1) / (this->_hi_iteration - this->_lo_iteration);
+    this->_colour_scaler = (static_cast<float>(this->_opts->number_hue) - 1) / (this->_hi_iteration - this->_lo_iteration);
 }
 
 void Colourizer::setOrbits(std::vector<std::vector<std::vector<std::complex<float> > > >* orbits){
@@ -107,8 +105,8 @@ bool Colourizer::generatePalette(){
     return false;
 }
 
-bool Colourizer::paletteProgressTick(int current){
-        this->_temp = ceil(current / this->_palette_progress_diff);
+bool Colourizer::paletteProgressTick(const int current){
+        this->_temp = ceil(static_cast<float>(current) / this->_palette_progress_diff);
         if(this->_temp > this->_palette_progress){
             while(this->_palette_progress < this->_temp){
                 this->_palette_progress++;
@@ -125,7 +123,7 @@ bool Colourizer::paletteProgressTick(int current){
 }
 
 bool Colourizer::run(){
-	int palette_size = this->_palette.size() - 1;
+	int palette_size = static_cast<int>(this->_palette.size()) - 1;
 
     PixelPacket *pixel_cache = this->_image.getPixels(0, 0, this->_px, this->_py);
     PixelPacket *next_pixel = pixel_cache;
@@ -134,15 +132,15 @@ bool Colourizer::run(){
         for(this->_idx = 0; this->_idx < this->_px; this->_idx++){
             if((*this->results)[this->_idy][this->_idx] != -1){
                 if(this->_opts->invertspectrum){
-					*next_pixel = this->_palette[palette_size - (int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
+					*next_pixel = this->_palette[palette_size - static_cast<int>(round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler))];
 			    } else {
-                    *next_pixel = this->_palette[(int)round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)];
+                    *next_pixel = this->_palette[static_cast<int>(round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler))];
                 }
             }
-            next_pixel++;
+            next_pixel++; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         this->_current_iteration += this->_px;
-        this->_temp = floor(this->_current_iteration / this->_progress_diff);
+        this->_temp = floor(static_cast<float>(this->_current_iteration) / this->_progress_diff);
         if(this->_temp > this->_progress){
             while(this->_progress < this->_temp){
                 this->_progress++;
@@ -170,6 +168,6 @@ void Colourizer::writeImage(const char* filename){
     this->_image.write(filename);
 }
 
-void Colourizer::profile(){
+void Colourizer::profile() const {
 	cout << this->_lo_iteration << ":" << this->_hi_iteration << endl;
 }

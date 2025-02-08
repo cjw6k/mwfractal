@@ -17,19 +17,12 @@
 using namespace std;
 using namespace JS;
 
-JuliaPowExp::JuliaPowExp(boost::shared_ptr<ProgramOptions> opts)
- : Julia::Julia(opts){
-}
-
-JuliaPowExp::JuliaPowExp(const JuliaPowExp& orig)
- : Julia::Julia(orig){
-}
-
-JuliaPowExp::~JuliaPowExp(){
+JuliaPowExp::JuliaPowExp(const boost::shared_ptr<ProgramOptions> &opts)
+ : Julia(opts){
 }
 
 void JuliaPowExp::_iterate(){
-    this->_z = pow(this->_z, this->_opts->g4_power) * exp(pow(this->_z, this->_opts->g4_exponent)) + (std::complex<double>)this->_c;
+    this->_z = pow(this->_z, static_cast<int>(this->_opts->g4_power)) * exp(pow(this->_z, static_cast<int>(this->_opts->g4_exponent))) + this->_c;
 }
 
 void JuliaPowExp::_postOrbit(){
@@ -40,7 +33,7 @@ void JuliaPowExp::_postOrbit(){
         //this->_iterate_fraction = log(this->_ln_cutoff / log(this->_zabs)) / this->_ln_2;
 		this->_iterate_fraction = (log(this->_zabs) - this->_ln_cutoff) / ((this->_opts->g4_power - 1) * this->_ln_cutoff + pow(this->_opts->cutoff, this->_opts->g4_exponent));
         this->_argument = this->_idx + 1 + this->_iterate_fraction;
-        this->results[this->_row].push_back(this->_argument);
+        this->results[this->_row].push_back(static_cast<float>(this->_argument));
     } else {
         this->results[this->_row].push_back(-1);
     }

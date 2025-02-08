@@ -22,13 +22,12 @@ namespace JS{
 class MW_Darts_Violet_to_Red : public Colourizer{
 
 public:
-    MW_Darts_Violet_to_Red(boost::shared_ptr<ProgramOptions> opts);
-    virtual ~MW_Darts_Violet_to_Red();
+    MW_Darts_Violet_to_Red(const boost::shared_ptr<ProgramOptions> &opts);
     bool generatePalette();
     void generateScores();
 	bool run();
-	int game();
-	int getScore(std::complex<float> shot);
+	int game() const;
+	static int getScore(std::complex<float> shot);
 
 private:
     int _lo_score, _hi_score;

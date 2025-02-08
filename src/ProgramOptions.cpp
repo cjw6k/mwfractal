@@ -14,6 +14,7 @@
 
 #include "ProgramOptions.hpp"
 
+#include <config.h>
 #include <boost/program_options.hpp>
 
 #include <iostream>
@@ -24,15 +25,38 @@ using namespace JS;
 using namespace std;
 
 ProgramOptions::ProgramOptions(int argc, char **argv) : 
-		profile(),
-		quiet(),
+		showuniques(),
 		showresults(),
+		autoopen(),
 		showorbits(),
 		skiporbits(),
-		showuniques(),
-		autoopen(),
 		invertspectrum(),
-		_status()
+		quiet(),
+		profile(),
+        status(),
+        max_iterations(),
+        colourizer(),
+        generator(),
+        number_hue(),
+        number_lightness(),
+        width(),
+        height(),
+        low_escape(),
+        high_escape(),
+        g4_power(),
+        g4_exponent(),
+        max_re(),
+        max_im(),
+        min_re(),
+        min_im(),
+        cutoff(),
+        cr(),
+        ci(),
+        spectral_min(),
+        spectral_max(),
+        lightness_min(),
+        lightness_max(),
+		colour_weighting()
 	{
 
     bpo::options_description generic("Generic Options");
@@ -74,8 +98,8 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
         ("lightness_minimum", bpo::value<double>(&this->lightness_min)->default_value(0.3), "Minimum lightness (0.0 = black, 1.0 = white)")
         ("lightness_maximum", bpo::value<double>(&this->lightness_max)->default_value(0.7), "Maximum lightness (0.0 = black, 1.0 = white)")
         ("colour_weighting", bpo::value<double>(&this->colour_weighting)->default_value(0.0), "Colour weighting is complicated...try a real floating pt number (+ or -) and see what happens")
-        ("low_escape", bpo::value<double>(&this->low_escape)->default_value(-1), "Force the colourizer to use this value as the lowest value in the range of all escape values")
-        ("high_escape", bpo::value<double>(&this->high_escape)->default_value(-1), "Force the colourizer to use this value as the highest value in the range of all escape values")
+        ("low_escape", bpo::value<float>(&this->low_escape)->default_value(-1), "Force the colourizer to use this value as the lowest value in the range of all escape values")
+        ("high_escape", bpo::value<float>(&this->high_escape)->default_value(-1), "Force the colourizer to use this value as the highest value in the range of all escape values")
         ("invertspectrum,i", bpo::value<bool>(&this->invertspectrum)->zero_tokens(), "Invert the colour spectrum of the colourizer")
         ("profile,p", bpo::value<bool>(&this->profile)->zero_tokens(), "Generate profiling information")
         ("convergecolour", bpo::value<std::string>(&this->convergecolour)->default_value("#000000"), "Colour converging pixels, hex triplet (default is black)");
@@ -93,7 +117,7 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
         bpo::store(bpo::command_line_parser(argc, argv).options(cmdline).run(), vm);
     } catch(exception &e){
         cout << "ERROR: " << e.what() << endl << "Use -h for help" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
@@ -101,61 +125,61 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
 
     if(vm.count("help")){
         cout << endl << visible << endl;
-        this->_status = 1;
+        this->status = 1;
         return;
     }
 
     if(vm.count("version")){
-        cout << endl << "\tMoore & Willcock" << endl << "\tVersion: 1.0 + 0.1i" << endl;
-        this->_status = 1;
+        cout << endl << "\tmwfractal" << endl << "\tVersion: " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << VERSION_PRE_RELEASE << endl;
+        this->status = 1;
         return;
     }
 
     if(this->number_hue <= 0){
         cout << " (!) Number of hues '" << this->number_hue << "' must be a positive integer" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if(this->number_lightness <= 0){
         cout << " (!) Number of lightnesses '" << this->number_lightness << "' must be a positive integer" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if((this->spectral_min < 0.0) || (this->spectral_min > 6.0)){
         cout << " (!) The spectral minimum '" << this->spectral_min << "' must be bound by [0.0, 6.0]" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if((this->spectral_max < 0.0) || (this->spectral_max > 6.0)){
         cout << " (!) The spectral maximum '" << this->spectral_max << "' must be bound by [0.0, 6.0]" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if(this->spectral_min > this->spectral_max){
         cout << " (!) The spectral minimum '" << this->spectral_min << "' cannot exceed the spectral maximum '" << this->spectral_max << "'" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if((this->lightness_min < 0.0) || (this->lightness_min > 1.0)){
         cout << " (!) The lightness minimum '" << this->lightness_min << "' must be bound by [0.0, 1.0]" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if((this->lightness_max < 0.0) || (this->lightness_max > 1.0)){
         cout << " (!) The lightness maximum '" << this->lightness_max << "' must be bound by [0.0, 1.0]" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
     if(this->lightness_min > this->lightness_max){
         cout << " (!) The lightness minimum '" << this->lightness_min << "' cannot exceed the lightness maximum '" << this->lightness_max << "'" << endl;
-        this->_status = 2;
+        this->status = 2;
         return;
     }
 
@@ -164,11 +188,4 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
 	}
 	
     return;
-}
-
-ProgramOptions::~ProgramOptions(){
-}
-
-int ProgramOptions::getStatus(){
-    return this->_status;
 }

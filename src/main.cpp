@@ -17,7 +17,6 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "config.h"
 #include "ProgramOptions.hpp"
 #include "generators/JuliaPowExp.hpp"
 #include "generators/Julia3.hpp"
@@ -63,8 +62,8 @@ int main(int argc, char** argv){
 	} catch (exception e){
         handleException(e);
 	}
-    if(opts->getStatus() != 0){
-        if(opts->getStatus() > 1){
+    if(opts->status != 0){
+        if(opts->status > 1){
             exit(EXIT_FAILURE);
         } else {
             exit(EXIT_SUCCESS);
@@ -93,7 +92,6 @@ int main(int argc, char** argv){
         default:
             cout << " (!) Invalid Generator '" << opts->generator << "'" << endl;
             exit(EXIT_FAILURE);
-            break;
     }
 
 	if(!opts->quiet){
@@ -132,7 +130,6 @@ int main(int argc, char** argv){
         default:
             cout << " (!) Invalid Colourizer '" << opts->colourizer << "'" << endl;
             exit(EXIT_FAILURE);
-            break;
     }
 
     colourizer->setResults(&generator->results);
@@ -173,7 +170,7 @@ int main(int argc, char** argv){
 	    cout << endl << "Writing File '";
 	}
     try {
-        auto filename = generateFilename(opts);
+        const string filename = generateFilename(opts);
 
 		if(!opts->quiet){
 	        cout << filename << "' ... ";
