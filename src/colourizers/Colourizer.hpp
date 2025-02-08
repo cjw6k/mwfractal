@@ -45,6 +45,11 @@ public:
     std::vector<std::vector<std::vector<std::complex<float> > > >* orbits;
 
 private:
+    Colourizer(const Colourizer& orig);
+    Colourizer& operator=(const Colourizer& orig);
+
+    int _palette_progress;
+    float _hi_iteration;
 
 protected:
     boost::shared_ptr<ProgramOptions> _opts;
@@ -53,8 +58,8 @@ protected:
 
     std::vector<Magick::ColorRGB> _palette;
 
-    int _px, _py, _idy, _idx, _total_iterations, _current_iteration, _temp, _progress, _palette_progress;
-    float _progress_diff, _palette_progress_diff, _lo_iteration, _hi_iteration;
+    int _px, _py, _idy, _idx, _total_iterations, _current_iteration, _temp, _progress;
+    float _progress_diff, _palette_progress_diff, _lo_iteration;
     double _r, _g, _b, _h, _s, _l, _chroma, _x, _m;
     double _frac_part, _ones_digit, _spectral_diff, _lightness_diff;
     double _colour_scaler, _arctan_horiz_scaler, _arctan_vert_scaler;

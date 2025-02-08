@@ -19,14 +19,7 @@ using namespace Magick;
 using namespace std;
 
 NEM_Violet_to_Red::NEM_Violet_to_Red(const boost::shared_ptr<ProgramOptions> &opts)
- : Colourizer::Colourizer(opts){
-}
-
-NEM_Violet_to_Red::NEM_Violet_to_Red(const NEM_Violet_to_Red& orig)
- : Colourizer::Colourizer(orig){
-}
-
-NEM_Violet_to_Red::~NEM_Violet_to_Red(){
+ : Colourizer(opts){
 }
 
 bool NEM_Violet_to_Red::generatePalette(){
@@ -37,12 +30,13 @@ bool NEM_Violet_to_Red::generatePalette(){
 	this->_palette.reserve(this->_opts->number_hue);
 
     for(this->_idx = 0; this->_idx < this->_opts->number_hue; this->_idx++){
+        const double HALF_PIXEL_OFFSET = 0.5;
         if(this->_opts->colour_weighting == 0.0){
-            this->_h = this->_spectral_diff * (this->_idx + 0.5) / this->_opts->number_hue + this->_opts->spectral_min;
+            this->_h = this->_spectral_diff * (this->_idx + HALF_PIXEL_OFFSET) / this->_opts->number_hue + this->_opts->spectral_min;
         } else if(this->_opts->colour_weighting > 0.0){
-            this->_h = this->_spectral_diff * atan((this->_idx + 0.5) * this->_arctan_horiz_scaler) / this->_arctan_vert_scaler + this->_opts->spectral_min;
+            this->_h = this->_spectral_diff * atan((this->_idx + HALF_PIXEL_OFFSET) * this->_arctan_horiz_scaler) / this->_arctan_vert_scaler + this->_opts->spectral_min;
         } else {
-            this->_h = this->_spectral_diff * (1.0 - atan((this->_opts->number_hue - (this->_idx + 0.5)) * this->_arctan_horiz_scaler) / this->_arctan_vert_scaler) + this->_opts->spectral_min;
+            this->_h = this->_spectral_diff * (1.0 - atan((this->_opts->number_hue - (this->_idx + HALF_PIXEL_OFFSET)) * this->_arctan_horiz_scaler) / this->_arctan_vert_scaler) + this->_opts->spectral_min;
         }
 
         this->_x = this->_chroma * (1.0 - fabs(fmod(this->_h, 2.0) - 1.0));

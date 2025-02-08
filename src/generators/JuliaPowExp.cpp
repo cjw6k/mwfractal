@@ -21,13 +21,6 @@ JuliaPowExp::JuliaPowExp(const boost::shared_ptr<ProgramOptions> &opts)
  : Julia(opts){
 }
 
-JuliaPowExp::JuliaPowExp(const JuliaPowExp& orig)
- : Julia(orig){
-}
-
-JuliaPowExp::~JuliaPowExp(){
-}
-
 void JuliaPowExp::_iterate(){
     this->_z = pow(this->_z, static_cast<int>(this->_opts->g4_power)) * exp(pow(this->_z, static_cast<int>(this->_opts->g4_exponent))) + this->_c;
 }

@@ -52,14 +52,13 @@ Generator::Generator(const boost::shared_ptr<ProgramOptions> &opts) :
     this->_ln_2 = log(2.0);
     this->_ln_cutoff = log(this->_opts->cutoff);
 
-    int idy;
     this->results.resize(this->_py);
-    for(idy = 0; idy < this->_py; idy++){
+    for(int idy = 0; idy < this->_py; idy++){
             this->results[idy].reserve(this->_px);
     }
     if(!this->_opts->skiporbits){
         this->orbits.resize(this->_py);
-        for(idy = 0; idy < this->_py; idy++){
+        for(int idy = 0; idy < this->_py; idy++){
             this->orbits[idy].resize(this->_px);
             for(int idx = 0; idx < this->_px; idx++){
                 this->orbits[idy][idx].reserve(this->_opts->max_iterations);

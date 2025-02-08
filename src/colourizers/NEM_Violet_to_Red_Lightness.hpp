@@ -23,8 +23,6 @@ class NEM_Violet_to_Red_Lightness : public Colourizer{
 
 public:
     NEM_Violet_to_Red_Lightness(const boost::shared_ptr<ProgramOptions> &opts);
-    NEM_Violet_to_Red_Lightness(const NEM_Violet_to_Red_Lightness& orig);
-    virtual ~NEM_Violet_to_Red_Lightness();
     bool generatePalette();
 	bool run();
 

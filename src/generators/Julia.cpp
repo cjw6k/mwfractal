@@ -21,13 +21,6 @@ Julia::Julia(const boost::shared_ptr<ProgramOptions> &opts)
  : Generator(opts){
 }
 
-Julia::Julia(const Julia& orig)
- : Generator(orig){
-}
-
-Julia::~Julia(){
-}
-
 void Julia::_preLoop(){
     this->_c = complex<float>(static_cast<float>(this->_opts->cr), static_cast<float>(this->_opts->ci));
 }

@@ -1,6 +1,7 @@
 Checks: >
   -*,
   bugprone-*,
+  cppcoreguidelines-*,
 
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'

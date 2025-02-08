@@ -27,8 +27,6 @@ class JuliaPowExp : public Julia{
 
 public:
     JuliaPowExp(const boost::shared_ptr<ProgramOptions> &opts);
-    JuliaPowExp(const JuliaPowExp& orig);
-    virtual ~JuliaPowExp();
 
 private:
 

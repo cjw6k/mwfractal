@@ -19,7 +19,7 @@ using namespace Magick;
 using namespace std;
 
 MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(const boost::shared_ptr<ProgramOptions> &opts ) :
-		Colourizer::Colourizer( opts ),
+		Colourizer( opts ),
 		_lo_score(),
 		_hi_score(),
 		_ln_lo_score(),
@@ -30,26 +30,25 @@ MW_Darts_Violet_to_Red::MW_Darts_Violet_to_Red(const boost::shared_ptr<ProgramOp
 	srand( time( NULL ) );
 } 
 
-MW_Darts_Violet_to_Red::~MW_Darts_Violet_to_Red() {
-}
-
 bool MW_Darts_Violet_to_Red::generatePalette() {
-    this->_palette_progress_diff = static_cast<float>(this->_opts->number_lightness) / 80;
+    const size_t POINTS_PER_PROGRESS_TICK = 80;
+    this->_palette_progress_diff = static_cast<float>(this->_opts->number_lightness) / POINTS_PER_PROGRESS_TICK;
     this->_s = 1.0;
 
 	this->_palette.reserve( static_cast<unsigned long>(this->_opts->number_lightness) * this->_opts->number_hue );
 
     for( this->_idy = 0; this->_idy < this->_opts->number_lightness; this->_idy++ ) {
-        this->_l = this->_lightness_diff / this->_opts->number_lightness * ( this->_idy + 0.5 ) + this->_opts->lightness_min;
-        this->_chroma = ( 1.0 - fabs( 2.0 * this->_l - 1.0 ) ) * this->_s;
+        const double HALF_PIXEL_OFFSET = 0.5;
+        this->_l = this->_lightness_diff / this->_opts->number_lightness * ( this->_idy + HALF_PIXEL_OFFSET ) + this->_opts->lightness_min;
+        this->_chroma = ( 1.0 - fabs( 2 * this->_l - 1.0 ) ) * this->_s;
 
         for( this->_idx = 0; this->_idx < this->_opts->number_hue; this->_idx++ ) {
             if( this->_opts->colour_weighting == 0.0 ) {
-                this->_h = this->_spectral_diff * ( this->_idx + 0.5 ) / this->_opts->number_hue + this->_opts->spectral_min;
+                this->_h = this->_spectral_diff * ( this->_idx + HALF_PIXEL_OFFSET ) / this->_opts->number_hue + this->_opts->spectral_min;
             } else if( this->_opts->colour_weighting > 0.0 ) {
-                this->_h = this->_spectral_diff * atan( ( this->_idx + 0.5 ) * this->_arctan_horiz_scaler ) / this->_arctan_vert_scaler + this->_opts->spectral_min;
+                this->_h = this->_spectral_diff * atan( ( this->_idx + HALF_PIXEL_OFFSET ) * this->_arctan_horiz_scaler ) / this->_arctan_vert_scaler + this->_opts->spectral_min;
             } else {
-                this->_h = this->_spectral_diff * ( 1.0 - atan( ( this->_opts->number_hue - ( this->_idx + 0.5 ) ) * this->_arctan_horiz_scaler ) / this->_arctan_vert_scaler ) + this->_opts->spectral_min;
+                this->_h = this->_spectral_diff * ( 1.0 - atan( ( this->_opts->number_hue - ( this->_idx + HALF_PIXEL_OFFSET ) ) * this->_arctan_horiz_scaler ) / this->_arctan_vert_scaler ) + this->_opts->spectral_min;
             }
 
             this->_x = this->_chroma * ( 1.0 - fabs( fmod( this->_h, 2.0 ) - 1.0 ) );
@@ -112,7 +111,7 @@ bool MW_Darts_Violet_to_Red::run() {
 					*next_pixel = this->_palette.at( static_cast<int>(floor(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler)) + this->_opts->number_hue * static_cast<int>(floor((this->_opts->number_lightness - 1) * this->_frac_part)) );
                 }
             }
-            next_pixel++;
+            next_pixel++; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
 		if(!this->_opts->quiet){
 			this->_current_iteration += this->_px;
@@ -173,100 +172,27 @@ int MW_Darts_Violet_to_Red::getScore(const std::complex<float> shot ) {
 //  -inner double ring = 25 * bullseye
 //  -outer double ring = 26.5 * bullseye
 
-    float bullseye = 0.5;
-    if( abs( shot ) > 26.5 * bullseye ) return 0;
-    if( abs( shot ) < bullseye ) return 50;
-    if( abs( shot ) < 2.5 * bullseye ) return 25;
+    const float BULLS_RING_RADIUS_FACTOR = 2.5;
+    const float INNER_TREBLE_RING_RADIUS_FACTOR = 15;
+    const float OUTER_TREBLE_RING_RADIUS_FACTOR = 16.5;
+    const float INNER_DOUBLE_RING_RADIUS_FACTOR = 25;
+    const float OUTER_DOUBLE_RING_RADIUS_FACTOR = 26.5;
+    const float BULLSEYE = 0.5;
+    const int BULLSEYE_SCORE = 50;
+    const int BULLRING_SCORE = 25;
+    if( abs( shot ) > OUTER_DOUBLE_RING_RADIUS_FACTOR * BULLSEYE ) return 0;
+    if( abs( shot ) < BULLSEYE ) return BULLSEYE_SCORE;
+    if( abs( shot ) < BULLS_RING_RADIUS_FACTOR * BULLSEYE ) return BULLRING_SCORE;
 
-    int phase_index = static_cast<int>(ceil(arg(shot) * 20 / M_PI));
-    int score = 0;
+    const double SEGMENT_ANGLE = M_PI / 10; // 18 degrees per segment
+    const int SEGMENT_SCORES[20] = { 6, 13, 4, 18, 1, 20, 5, 12, 9, 14, 11, 8, 16, 7, 19, 3, 17, 2, 15, 10};
 
-    switch( phase_index ) {
-        case -19:
-            score = 11;
-            break;
-        case -18:
-        case -17:
-            score = 8;
-            break;
-        case -16:
-        case -15:
-            score = 16;
-            break;
-        case -14:
-        case -13:
-            score = 7;
-            break;
-        case -12:
-        case -11:
-            score = 19;
-            break;
-        case -10:
-        case -9:
-            score = 3;
-            break;
-        case -8:
-        case -7:
-            score = 17;
-            break;
-        case -6:
-        case -5:
-            score = 2;
-            break;
-        case -4:
-        case -3:
-            score = 15;
-            break;
-        case -2:
-        case -1:
-            score = 10;
-            break;
-        case 0:
-        case 1:
-            score = 6;
-            break;
-        case 2:
-        case 3:
-            score = 13;
-            break;
-        case 4:
-        case 5:
-            score = 4;
-            break;
-        case 6:
-        case 7:
-            score = 18;
-            break;
-        case 8:
-        case 9:
-            score = 1;
-            break;
-        case 10:
-        case 11:
-            score = 20;
-            break;
-        case 12:
-        case 13:
-            score = 5;
-            break;
-        case 14:
-        case 15:
-            score = 12;
-            break;
-        case 16:
-        case 17:
-            score = 9;
-            break;
-        case 18:
-        case 19:
-            score = 14;
-            break;
-        default:
-            score = 11;
-    }
+    const unsigned int segment_hit = static_cast<unsigned int>(floor((arg(shot) + M_PI) / SEGMENT_ANGLE)) % 20;
 
-    if( abs( shot ) > 25 * bullseye ) return score * 2;
-    if( ( abs( shot ) > 15 * bullseye ) && ( abs( shot ) < 16.5 * bullseye ) ) return score * 3;
+    const int score = SEGMENT_SCORES[segment_hit];
+
+    if( abs( shot ) > INNER_DOUBLE_RING_RADIUS_FACTOR * BULLSEYE ) return score * 2;
+    if( ( abs( shot ) > INNER_TREBLE_RING_RADIUS_FACTOR * BULLSEYE ) && ( abs( shot ) < OUTER_TREBLE_RING_RADIUS_FACTOR * BULLSEYE ) ) return score * 3;
 
     return score;
 }

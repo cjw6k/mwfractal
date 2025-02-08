@@ -27,8 +27,6 @@ class Julia : public Generator{
 
 public:
     Julia(const boost::shared_ptr<ProgramOptions> &opts);
-    Julia(const Julia& orig);
-    virtual ~Julia();
 
 private:
 

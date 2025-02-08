@@ -36,6 +36,15 @@ public:
     std::vector<std::vector<std::vector<std::complex<float> > > > orbits;
 
 private:
+    Generator(const Generator& orig);
+    Generator& operator=(const Generator& orig);
+
+    std::complex<float> _dp_re, _dp_im;
+    std::map<int, double>::iterator _uniq_itr;
+
+    int _px, _py, _ppx, _ppy, _total_points, _temp, _progress;
+    float _acc_iterations, _current_iteration, _current_point, _progress_diff;
+    double _ln_2;
 
 protected:
     virtual void _iterate();
@@ -52,16 +61,14 @@ protected:
     virtual bool _bailoutTest();
     virtual void _bailout();
 
-    std::complex<float> _c, _z, _p;
-    std::complex<float> _dp_re, _dp_im;
+    std::complex<float> _c, _z, _p; // NOLINT(cppcoreguidelines-non-private-member-variables-in-classes)
     std::map<int, double> _uniques;
-    std::map<int, double>::iterator _uniq_itr;
 
     boost::shared_ptr<ProgramOptions> _opts;
 
-    int _px, _py, _ppx, _ppy, _total_points, _idx, _temp, _row, _col, _progress;
-    float _acc_iterations, _current_iteration, _current_point, _progress_diff, _zabs;
-    double _ln_2, _ln_cutoff, _iterate_fraction, _argument;
+    int _idx, _row, _col;
+    float _zabs;
+    double _ln_cutoff, _iterate_fraction, _argument;
 
 };
 

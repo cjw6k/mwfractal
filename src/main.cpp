@@ -62,8 +62,8 @@ int main(int argc, char** argv){
 	} catch (exception e){
         handleException(e);
 	}
-    if(opts->getStatus() != 0){
-        if(opts->getStatus() > 1){
+    if(opts->status != 0){
+        if(opts->status > 1){
             exit(EXIT_FAILURE);
         } else {
             exit(EXIT_SUCCESS);

@@ -21,13 +21,6 @@ Mandelbrot::Mandelbrot(const boost::shared_ptr<ProgramOptions> &opts)
  : Generator(opts){
 }
 
-Mandelbrot::Mandelbrot(const Mandelbrot& orig)
- : Generator(orig){
-}
-
-Mandelbrot::~Mandelbrot(){
-}
-
 void Mandelbrot::_preOrbit(){
     this->_c = this->_p;
     this->_z = complex<float>(0, 0);

@@ -47,13 +47,12 @@ Colourizer::Colourizer(const boost::shared_ptr<ProgramOptions> &opts) :
 		_m(),
 		_frac_part(),
 		_ones_digit(),
-		_colour_scaler()
+		_spectral_diff(opts->spectral_max - opts->spectral_min),
+		_lightness_diff(opts->lightness_max - opts->lightness_min),
+		_colour_scaler(),
+		_arctan_horiz_scaler(opts->colour_weighting / opts->number_hue),
+		_arctan_vert_scaler(atan(opts->colour_weighting))
 	{
-    
-    this->_spectral_diff = opts->spectral_max - opts->spectral_min;
-    this->_lightness_diff = opts->lightness_max - opts->lightness_min;
-    this->_arctan_horiz_scaler = opts->colour_weighting / opts->number_hue;
-    this->_arctan_vert_scaler = atan(opts->colour_weighting);
 
     if(this->_px == 0){
 		this->_px = 1;
@@ -138,7 +137,7 @@ bool Colourizer::run(){
                     *next_pixel = this->_palette[static_cast<int>(round(((*this->results)[this->_idy][this->_idx] - this->_lo_iteration) * this->_colour_scaler))];
                 }
             }
-            next_pixel++;
+            next_pixel++; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         this->_current_iteration += this->_px;
         this->_temp = floor(static_cast<float>(this->_current_iteration) / this->_progress_diff);

@@ -27,8 +27,6 @@ class Mandelbrot : public Generator{
 
 public:
     Mandelbrot(const boost::shared_ptr<ProgramOptions> &opts);
-    Mandelbrot(const Mandelbrot& orig);
-    virtual ~Mandelbrot();
 
 private:
 

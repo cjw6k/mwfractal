@@ -21,13 +21,6 @@ Julia3::Julia3(const boost::shared_ptr<ProgramOptions> &opts)
  : Julia(opts){
 }
 
-Julia3::Julia3(const Julia3& orig)
- : Julia(orig){
-}
-
-Julia3::~Julia3(){
-}
-
 void Julia3::_iterate(){
     this->_z = this->_z * this->_z * this->_z + this->_c;
 }
