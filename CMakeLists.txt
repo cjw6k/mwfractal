@@ -14,7 +14,7 @@ include(FetchContent)
 set(VERSION_MAJOR 2)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
-set(VERSION_PRE_RELEASE "-alpha")
+set(VERSION_PRE_RELEASE "-dev")
 
 configure_file(cmake/config.h.in ${PROJECT_BINARY_DIR}/config.h @ONLY)
 
