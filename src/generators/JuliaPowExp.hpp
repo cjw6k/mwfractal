@@ -26,7 +26,7 @@ namespace JS{
 class JuliaPowExp : public Julia{
 
 public:
-    JuliaPowExp(boost::shared_ptr<ProgramOptions> opts);
+    JuliaPowExp(const boost::shared_ptr<ProgramOptions> &opts);
     JuliaPowExp(const JuliaPowExp& orig);
     virtual ~JuliaPowExp();
 

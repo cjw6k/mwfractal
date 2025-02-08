@@ -25,14 +25,14 @@ using namespace JS;
 using namespace std;
 
 ProgramOptions::ProgramOptions(int argc, char **argv) : 
-		profile(),
-		quiet(),
+		showuniques(),
 		showresults(),
+		autoopen(),
 		showorbits(),
 		skiporbits(),
-		showuniques(),
-		autoopen(),
 		invertspectrum(),
+		quiet(),
+		profile(),
 		_status()
 	{
 
@@ -75,8 +75,8 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
         ("lightness_minimum", bpo::value<double>(&this->lightness_min)->default_value(0.3), "Minimum lightness (0.0 = black, 1.0 = white)")
         ("lightness_maximum", bpo::value<double>(&this->lightness_max)->default_value(0.7), "Maximum lightness (0.0 = black, 1.0 = white)")
         ("colour_weighting", bpo::value<double>(&this->colour_weighting)->default_value(0.0), "Colour weighting is complicated...try a real floating pt number (+ or -) and see what happens")
-        ("low_escape", bpo::value<double>(&this->low_escape)->default_value(-1), "Force the colourizer to use this value as the lowest value in the range of all escape values")
-        ("high_escape", bpo::value<double>(&this->high_escape)->default_value(-1), "Force the colourizer to use this value as the highest value in the range of all escape values")
+        ("low_escape", bpo::value<float>(&this->low_escape)->default_value(-1), "Force the colourizer to use this value as the lowest value in the range of all escape values")
+        ("high_escape", bpo::value<float>(&this->high_escape)->default_value(-1), "Force the colourizer to use this value as the highest value in the range of all escape values")
         ("invertspectrum,i", bpo::value<bool>(&this->invertspectrum)->zero_tokens(), "Invert the colour spectrum of the colourizer")
         ("profile,p", bpo::value<bool>(&this->profile)->zero_tokens(), "Generate profiling information")
         ("convergecolour", bpo::value<std::string>(&this->convergecolour)->default_value("#000000"), "Colour converging pixels, hex triplet (default is black)");
@@ -170,6 +170,6 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
 ProgramOptions::~ProgramOptions(){
 }
 
-int ProgramOptions::getStatus(){
+int ProgramOptions::getStatus() const {
     return this->_status;
 }

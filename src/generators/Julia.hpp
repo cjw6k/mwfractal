@@ -26,7 +26,7 @@ namespace JS{
 class Julia : public Generator{
 
 public:
-    Julia(boost::shared_ptr<ProgramOptions> opts);
+    Julia(const boost::shared_ptr<ProgramOptions> &opts);
     Julia(const Julia& orig);
     virtual ~Julia();
 

@@ -26,7 +26,7 @@ namespace JS{
 class Mandelbrot : public Generator{
 
 public:
-    Mandelbrot(boost::shared_ptr<ProgramOptions> opts);
+    Mandelbrot(const boost::shared_ptr<ProgramOptions> &opts);
     Mandelbrot(const Mandelbrot& orig);
     virtual ~Mandelbrot();
 

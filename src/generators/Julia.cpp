@@ -17,19 +17,19 @@
 using namespace std;
 using namespace JS;
 
-Julia::Julia(boost::shared_ptr<ProgramOptions> opts)
- : Generator::Generator(opts){
+Julia::Julia(const boost::shared_ptr<ProgramOptions> &opts)
+ : Generator(opts){
 }
 
 Julia::Julia(const Julia& orig)
- : Generator::Generator(orig){
+ : Generator(orig){
 }
 
 Julia::~Julia(){
 }
 
 void Julia::_preLoop(){
-    this->_c = complex<float>(this->_opts->cr, this->_opts->ci);
+    this->_c = complex<float>(static_cast<float>(this->_opts->cr), static_cast<float>(this->_opts->ci));
 }
 
 void Julia::_preOrbit(){

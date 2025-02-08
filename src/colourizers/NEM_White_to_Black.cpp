@@ -18,7 +18,7 @@ using namespace JS;
 using namespace Magick;
 using namespace std;
 
-NEM_White_to_Black::NEM_White_to_Black(boost::shared_ptr<ProgramOptions> opts)
+NEM_White_to_Black::NEM_White_to_Black(const boost::shared_ptr<ProgramOptions> &opts)
  : Colourizer::Colourizer(opts){
 }
 
