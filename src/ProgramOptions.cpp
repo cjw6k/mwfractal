@@ -14,6 +14,7 @@
 
 #include "ProgramOptions.hpp"
 
+#include <config.h>
 #include <boost/program_options.hpp>
 
 #include <iostream>
@@ -106,7 +107,7 @@ ProgramOptions::ProgramOptions(int argc, char **argv) :
     }
 
     if(vm.count("version")){
-        cout << endl << "\tMoore & Willcock" << endl << "\tVersion: 1.0 + 0.1i" << endl;
+        cout << endl << "\tmwfractal" << endl << "\tVersion: " << VERSION_MAJOR << "." << VERSION_MINOR << "." << VERSION_PATCH << VERSION_PRE_RELEASE << endl;
         this->_status = 1;
         return;
     }

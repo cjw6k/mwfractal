@@ -29,7 +29,7 @@ JuliaPowExp::~JuliaPowExp(){
 }
 
 void JuliaPowExp::_iterate(){
-    this->_z = pow(this->_z, this->_opts->g4_power) * exp(pow(this->_z, this->_opts->g4_exponent)) + (std::complex<double>)this->_c;
+    this->_z = pow(this->_z, this->_opts->g4_power) * exp(pow(this->_z, this->_opts->g4_exponent)) + this->_c;
 }
 
 void JuliaPowExp::_postOrbit(){
